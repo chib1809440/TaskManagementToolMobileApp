@@ -7,9 +7,11 @@ const theme = {
     roundness: 2,
     colors: {
         ...PaperDefaultTheme.colors,
-        primary: '#202C45',
+        primary: '#2fc5ff',
         accent: '#f1c40f',
-        secondary: '#E81C2E'
+        secondary: '#202c45',
+        third: '#025659',
+        error: '#ff3333'
     },
 };
 export default theme;

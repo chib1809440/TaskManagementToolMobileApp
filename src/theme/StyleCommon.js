@@ -58,7 +58,7 @@ const StyleCommon = StyleSheet.create({
         borderRadius: 8
     },
     CarouselHeader: {
-        color: "#E81C2E",
+        color: "#2fc5ff",
         fontSize: 28,
         fontWeight: "bold",
         paddingLeft: 20,
@@ -72,32 +72,32 @@ const StyleCommon = StyleSheet.create({
         paddingRight: 20,
         textAlign: "center"
     },
-    FlexCenter:{
-        flex: 1, 
-        alignItems: 'center', 
+    FlexCenter: {
+        flex: 1,
+        alignItems: 'center',
         justifyContent: 'center'
     },
     ParagraphTextCenter: {
-        textAlign: 'center', 
-        marginLeft:16, 
-        marginRight:16
+        textAlign: 'center',
+        marginLeft: 16,
+        marginRight: 16
     },
-    ParagraphTextJustify:{
-        textAlign: 'justify', 
-        marginLeft:16, 
-        marginRight:16
+    ParagraphTextJustify: {
+        textAlign: 'justify',
+        marginLeft: 16,
+        marginRight: 16
     },
-    HeaderRed:{
-        color: '#E81C2E',
+    HeaderRed: {
+        color: '#2fc5ff',
     },
     ButtonCenter: {
-        flex:1, 
+        flex: 1,
         justifyContent: 'center'
     },
-    TextInputMarginVertical:{
+    TextInputMarginVertical: {
         marginVertical: 10
     },
-    marginHorizontalDefault:{
+    marginHorizontalDefault: {
         marginHorizontal: 20
     },
     calendar: {
