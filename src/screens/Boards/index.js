@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { Button, View, Text, SafeAreaView, TouchableOpacity, ToastAndroid } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Theme from '../../theme/Theme'
 const Boards = ({ navigation }) => {
@@ -19,7 +19,10 @@ const Boards = ({ navigation }) => {
                     <Text style={{ marginLeft: 8, color: '#fff' }}>T-Building's Workspace</Text>
                     <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
-                        onPress={() => navigation.navigate('WorkSpaces')}
+                        onPress={() => {
+                            ToastAndroid.show('onPress Menu Wordspace', ToastAndroid.SHORT);
+                            navigation.navigate('WorkSpaces')
+                        }}
                     >
                         <Icon
                             name='ellipsis-h'
@@ -28,7 +31,20 @@ const Boards = ({ navigation }) => {
                         />
                     </TouchableOpacity>
                 </View>
-                <Text>Boards 111111</Text>
+                <Text>Chứa danh sách các Topic task của wordspace</Text>
+                <TouchableOpacity
+                    style={{ paddingHorizontal: 8 }}
+                    onPress={() => {
+                        console.log("onPress to switch topic screen")
+                        navigation.navigate('Topic')
+                    }}
+                >
+                    <Icon
+                        name='tag'
+                        type='font-awesome'
+                        color={'#000'}
+                    />
+                </TouchableOpacity>
             </View>
         </SafeAreaView >
     );

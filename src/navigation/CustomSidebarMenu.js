@@ -18,7 +18,7 @@ import {
     DrawerItem,
 } from '@react-navigation/drawer';
 
-const CustomSidebarMenu = ({ navigation }) => {
+const CustomSidebarMenu = (navigation) => {
     const BASE_PATH =
         'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';
     const proileImage = 'react_logo.png';
@@ -92,18 +92,6 @@ const CustomSidebarMenu = ({ navigation }) => {
                 flex: 1,
                 marginTop: 10,
             }}>
-                <View style={{ marginHorizontal: 10, marginBottom: 8 }}>
-                    <Icon.Button
-                        name="credit-card"
-                        backgroundColor={Theme.Theme.colors.third}
-                        onPress={() => {
-                            console.log("on press on MyCard")
-                            navigation.navigate('MyCard')
-                        }}
-                    >
-                        My Card
-                    </Icon.Button>
-                </View>
                 <View style={{ marginHorizontal: 10, marginBottom: 8 }}>
                     <Icon.Button
                         name="gear"
