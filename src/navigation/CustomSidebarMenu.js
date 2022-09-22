@@ -5,20 +5,12 @@ import {
     StyleSheet,
     Image,
     Text,
-    Linking,
-    TouchableOpacity,
     ScrollView,
-    FlatList,
 } from 'react-native';
 import Theme from '../theme/'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-    DrawerContentScrollView,
-    DrawerItemList,
-    DrawerItem,
-} from '@react-navigation/drawer';
 
-const CustomSidebarMenu = (navigation) => {
+const CustomSidebarMenu = (props, navigation) => {
     const BASE_PATH =
         'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';
     const proileImage = 'react_logo.png';
@@ -47,7 +39,7 @@ const CustomSidebarMenu = (navigation) => {
                         backgroundColor={Theme.Theme.colors.third}
                         onPress={() => {
                             console.log("on press on boards")
-                            navigation.navigate('Boards')
+                            props.navigation.navigate('Boards')
                         }}
                     >
                         Boards
@@ -96,7 +88,10 @@ const CustomSidebarMenu = (navigation) => {
                     <Icon.Button
                         name="gear"
                         backgroundColor={Theme.Theme.colors.third}
-                        onPress={() => null}
+                        onPress={() => {
+                            console.log("on press on Setting")
+                            props.navigation.navigate('Setting System')
+                        }}
                     >
                         Setting
                     </Icon.Button>
@@ -105,7 +100,10 @@ const CustomSidebarMenu = (navigation) => {
                     <Icon.Button
                         name="question"
                         backgroundColor={Theme.Theme.colors.third}
-                        onPress={() => null}
+                        onPress={() => {
+                            console.log("on press on Setting")
+                            props.navigation.navigate('Help')
+                        }}
                     >
                         <Text style={{ marginLeft: 10, color: "#fff" }}>
                             Help
@@ -114,17 +112,9 @@ const CustomSidebarMenu = (navigation) => {
                 </View>
             </View>
             {/* <DrawerContentScrollView {...props}>
-                <View style={styles.WorkspacesInfoText}>
-                    <Text
-                        style={{ fontSize: 18, fontWeight: "bold" }}
-                    >
-                        Workspaces
-                    </Text>
-                </View>
                 <DrawerItemList {...props} />
             </DrawerContentScrollView> */}
         </SafeAreaView >
-
     );
 };
 

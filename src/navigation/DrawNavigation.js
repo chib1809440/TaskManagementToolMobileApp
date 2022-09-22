@@ -5,17 +5,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Boards from '../screens/Boards';
-import MyCard from '../screens/MyCard';
 import Topic from '../screens/Topic';
 import WorkSpaces from '../screens/WorkSpaces';
 import SettingWorkSpaces from '../screens/WorkSpaces/Setting';
+import SettingSystem from '../screens/Setting';
+import Help from '../screens/Help';
 import theme from '../theme/Theme'
 import CustomSidebarMenu from './CustomSidebarMenu'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Icon } from 'react-native-elements';
 import { ToastAndroid } from 'react-native';
 
-const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const NavigationDrawerStructure = (props) => {
@@ -36,119 +36,10 @@ const NavigationDrawerStructure = (props) => {
     );
 };
 
-// function FirstScreenStack({ navigation }) {
-//     return (
-//         <Tab.Navigator
-//             initialRouteName="Boards"
-//             screenOptions={({ route }) => ({
-//                 tabBarIcon: ({ focused, size, color }) => {
-//                     let iconName;
-//                     if (route.name === 'Boards') {
-//                         iconName = 'trello';
-//                         size = focused ? 25 : 20;
-//                         color = focused ? theme.colors.third : '#555';
-//                     } else if (route.name === 'MyCard') {
-//                         iconName = 'tasks';
-//                         size = focused ? 25 : 20;
-//                         color = focused ? theme.colors.third : '#555';
-//                     }
-//                     else if (route.name === 'WorkSpaces') {
-//                         iconName = 'calendar';
-//                         size = focused ? 25 : 20;
-//                         color = focused ? theme.colors.third : '#555';
-//                     }
-//                     else if (route.name === 'Notification') {
-//                         iconName = 'bell';
-//                         size = focused ? 25 : 20;
-//                         color = focused ? theme.colors.third : '#555';
-//                     } else {
-//                         iconName = 'cog';
-//                         size = focused ? 25 : 20;
-//                     }
-//                     return (
-//                         <FontAwesome5
-//                             name={iconName}
-//                             size={size}
-//                             color={color}
-//                         />
-//                     )
-//                 }
-//             })}
-//             tabBarOptions={{
-//                 initialRouteName: "Boards",
-//                 activeTintColor: '#0080ff',
-//                 activeBackgroundColor: '#fff',
-//                 // inactiveBackgroundColor: '#ccc',
-//                 // showLabel: false,
-//                 labelStyle: { fontSize: 14 },
-//                 showIcon: true,
-//             }}
-//             activeColor='#f0edf6'
-//             inactiveColor='#3e2465'
-//             barStyle={{ backgroundColor: '#694fad' }}
-//         >
-//             <Tab.Screen
-//                 name="Boards"
-//                 component={Boards}
-//                 options={{
-//                     headerShown: false,
-//                     title: 'Boards',
-//                     headerLeft: () => (
-//                         <NavigationDrawerStructure navigationProps={navigation} />
-//                     ),
-//                     headerStyle: {
-//                         backgroundColor: theme.colors.primary, //Set Header color
-//                     },
-//                     headerTintColor: '#fff', //Set Header text color
-//                     headerTitleStyle: {
-//                         fontWeight: 'bold', //Set Header text style
-//                     },
-//                 }}
-//             />
-//             <Tab.Screen
-//                 name="MyCard"
-//                 component={MyCard}
-//                 options={{
-//                     headerShown: false,
-//                     title: 'MyCard',
-//                     headerLeft: () => (
-//                         <NavigationDrawerStructure navigationProps={navigation} />
-//                     ),
-//                     headerStyle: {
-//                         backgroundColor: theme.colors.primary, //Set Header color
-//                     },
-//                     headerTintColor: '#fff', //Set Header text color
-//                     headerTitleStyle: {
-//                         fontWeight: 'bold', //Set Header text style
-//                     },
-//                 }}
-//             />
-//             <Tab.Screen
-//                 name="WorkSpaces"
-//                 component={WorkSpaces}
-//                 options={{
-//                     headerShown: true,
-//                     title: 'WorkSpaces',
-//                     headerLeft: () => (
-//                         <NavigationDrawerStructure navigationProps={navigation} />
-//                     ),
-//                     headerStyle: {
-//                         backgroundColor: theme.colors.primary, //Set Header color
-//                     },
-//                     headerTintColor: '#fff', //Set Header text color
-//                     headerTitleStyle: {
-//                         fontWeight: 'bold', //Set Header text style
-//                     },
-//                 }}
-//             />
-//         </Tab.Navigator>
-//     );
-// }
-
 function BoardsScreen({ navigation }) {
     return (
         <Stack.Navigator
-            initialRouteName="SecondPage"
+            initialRouteName="Boards"
             screenOptions={{
                 // headerLeft: () => (
                 //     <NavigationDrawerStructure navigationProps={navigation} />
@@ -268,7 +159,9 @@ function BoardsScreen({ navigation }) {
 function DrawerNavigation() {
     return (
         <Drawer.Navigator
-            screenOptions={{ headerShown: true }}
+            screenOptions={{
+                headerShown: true,
+            }}
             drawerContentOptions={{
                 activeTintColor: theme.colors.third,
                 itemStyle: { marginVertical: 5 },
@@ -276,8 +169,18 @@ function DrawerNavigation() {
             drawerContent={(props) => <CustomSidebarMenu {...props} />}>
             <Drawer.Screen
                 name="Boards"
-                options={{ drawerLabel: 'Board page Option' }}
+                options={{ drawerLabel: 'Board' }}
                 component={BoardsScreen}
+            />
+            <Drawer.Screen
+                name="Setting System"
+                options={{ drawerLabel: 'SettingSystem' }}
+                component={SettingSystem}
+            />
+            <Drawer.Screen
+                name="Help"
+                options={{ drawerLabel: 'Help' }}
+                component={Help}
             />
         </Drawer.Navigator>
     );
