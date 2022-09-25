@@ -3,13 +3,14 @@ import * as React from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Boards from '../screens/Boards';
+import MainBoard from '../screens/MainBoard';
 import Topic from '../screens/Topic';
 import WorkSpaces from '../screens/WorkSpaces';
 import SettingWorkSpaces from '../screens/WorkSpaces/Setting';
 import SettingSystem from '../screens/Setting';
+import MyTask from '../screens/MyTask';
 import Help from '../screens/Help';
+import RoomChat from '../screens/Topic/RoomChat';
 import theme from '../theme/Theme'
 import CustomSidebarMenu from './CustomSidebarMenu'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -39,7 +40,7 @@ const NavigationDrawerStructure = (props) => {
 function BoardsScreen({ navigation }) {
     return (
         <Stack.Navigator
-            initialRouteName="Boards"
+            initialRouteName="MainBoard"
             screenOptions={{
                 // headerLeft: () => (
                 //     <NavigationDrawerStructure navigationProps={navigation} />
@@ -47,79 +48,21 @@ function BoardsScreen({ navigation }) {
                 headerStyle: {
                     backgroundColor: theme.colors.primary, //Set Header color
                 },
-                headerTintColor: '#fff', //Set Header text color
+                headerTintColor: '#fff',
                 headerTitleStyle: {
-                    fontWeight: 'bold', //Set Header text style
+                    fontWeight: 'bold',
                 },
             }}>
             <Stack.Screen
-                name="Boards"
-                component={Boards}
+                name="MainBoard"
+                component={MainBoard}
                 options={{
-                    title: 'Boards xxx', //Set Header Title
+                    title: 'MainBoard', //Set Header Title
                     headerShown: false,
                 }}
             />
             <Stack.Screen
-                headerShown={false}
-                name="Topic"
-                component={Topic}
-                options={{
-                    title: 'Topic', //Set Header Title
-                    headerShown: true,
-                    headerStyle: { height: 40, backgroundColor: theme.colors.third },
-                    headerRight: () => (
-                        <View style={{
-                            flexDirection: 'row',
-                        }}>
-                            <TouchableOpacity
-                                style={{ paddingHorizontal: 8 }}
-                                onPress={() => {
-                                    console.log("onPress room chat")
-                                    ToastAndroid.show('onPress room chat', ToastAndroid.SHORT);
-                                    // navigation.navigate('SettingWorkSpaces')
-                                }}
-                            >
-                                <Icon
-                                    name='comments'
-                                    type='font-awesome'
-                                    color={'#fff'}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={{ paddingHorizontal: 8 }}
-                                onPress={() => {
-                                    console.log("onPress notification")
-                                    ToastAndroid.show('onPress notification', ToastAndroid.SHORT);
-                                    // navigation.navigate('SettingWorkSpaces')
-                                }}
-                            >
-                                <Icon
-                                    name='bell'
-                                    type='font-awesome'
-                                    color={'#fff'}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={{ paddingHorizontal: 8 }}
-                                onPress={() => {
-                                    console.log("onPress setting topic")
-                                    ToastAndroid.show('onPress setting topic', ToastAndroid.SHORT);
-                                    // navigation.navigate('SettingWorkSpaces')
-                                }}
-                            >
-                                <Icon
-                                    name='gear'
-                                    type='font-awesome'
-                                    color={'#fff'}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    ),
-                }}
-            />
-            <Stack.Screen
-                name="WorkSpaces"
+                name="Menu WorkSpaces"
                 component={WorkSpaces}
                 options={{
                     title: 'Menu WorkSpaces', //Set Header Title
@@ -128,8 +71,7 @@ function BoardsScreen({ navigation }) {
                         <TouchableOpacity
                             style={{ paddingHorizontal: 8 }}
                             onPress={() => {
-                                console.log("onPress setting")
-                                ToastAndroid.show('onPress Setting Wordspace', ToastAndroid.SHORT);
+                                console.log("onPress SettingWorkSpaces")
                                 navigation.navigate('SettingWorkSpaces')
                             }}
                         >
@@ -156,21 +98,65 @@ function BoardsScreen({ navigation }) {
     );
 }
 
+function TopicScreen({ navigation }) {
+    return (
+        <Stack.Navigator
+            initialRouteName="TopicMain"
+            screenOptions={{
+                // headerLeft: () => (
+                //     <NavigationDrawerStructure navigationProps={navigation} />
+                // ),
+                headerStyle: {
+                    backgroundColor: theme.colors.primary, //Set Header color
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+            }}>
+            <Stack.Screen
+                name="TopicMain"
+                component={Topic}
+                options={{
+                    title: 'Topic', //Set Header Title
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                headerShown={false}
+                name="RoomChat"
+                component={RoomChat}
+                options={{
+                    title: 'RoomChat', //Set Header Title
+                    headerShown: true,
+                    headerStyle: { height: 40, backgroundColor: theme.colors.third },
+                }}
+            />
+        </Stack.Navigator>
+    );
+}
 function DrawerNavigation() {
     return (
         <Drawer.Navigator
             screenOptions={{
                 headerShown: true,
-            }}
-            drawerContentOptions={{
                 activeTintColor: theme.colors.third,
                 itemStyle: { marginVertical: 5 },
             }}
+            // drawerContentOptions={{
+            // activeTintColor: theme.colors.third,
+            //     itemStyle: { marginVertical: 5 },
+            // }}
             drawerContent={(props) => <CustomSidebarMenu {...props} />}>
             <Drawer.Screen
                 name="Boards"
                 options={{ drawerLabel: 'Board' }}
                 component={BoardsScreen}
+            />
+            <Drawer.Screen
+                name="MyTask"
+                options={{ drawerLabel: 'My Task' }}
+                component={MyTask}
             />
             <Drawer.Screen
                 name="Setting System"
@@ -181,6 +167,11 @@ function DrawerNavigation() {
                 name="Help"
                 options={{ drawerLabel: 'Help' }}
                 component={Help}
+            />
+            <Drawer.Screen
+                name="Topic"
+                options={{ drawerLabel: 'Topic' }}
+                component={TopicScreen}
             />
         </Drawer.Navigator>
     );

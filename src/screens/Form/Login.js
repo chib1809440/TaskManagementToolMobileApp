@@ -111,7 +111,9 @@ export default function Login({ navigation }) {
                     dark={true}
                     labelStyle={{ padding: 5 }}
                     // onPress={formik.handleSubmit}>
-                    onPress={() => navigation.navigate('MainScreen')}>
+                    onPress={() => (
+                        console.log("onPress Button Login -> MainScreen"),
+                        navigation.navigate('MainScreen'))}>
                     Đăng nhập
                 </Button>
                 <Button mode="text"

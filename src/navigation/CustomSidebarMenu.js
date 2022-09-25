@@ -18,8 +18,10 @@ const CustomSidebarMenu = (props, navigation) => {
     const listWorkSpaces = [
         { id: 1, "name": 'T-Building', icon: 'building' },
         { id: 2, "name": 'Video-Service', icon: 'camera' },
-        // { id: 3, "name": 'Sphera', icon: 'camera' },
-        // { id: 4, "name": 'Sphera xxxxx', icon: 'camera' },
+        { id: 3, "name": 'Sphera', icon: 'camera' },
+        { id: 4, "name": 'Sphera xxxxx', icon: 'camera' },
+        // { id: 5, "name": 'Sphera xxxxx', icon: 'camera' },
+        // { id: 6, "name": 'Sphera xxxxx', icon: 'camera' },
     ]
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -45,6 +47,18 @@ const CustomSidebarMenu = (props, navigation) => {
                         Boards
                     </Icon.Button>
                 </View>
+                <View style={{ marginHorizontal: 10, marginTop: 8 }}>
+                    <Icon.Button
+                        name="list"
+                        backgroundColor={Theme.Theme.colors.third}
+                        onPress={() => {
+                            console.log("on press on My Tash")
+                            props.navigation.navigate('MyTask')
+                        }}
+                    >
+                        My Task
+                    </Icon.Button>
+                </View>
             </View>
 
             <View style={styles.WorkspacesInfo}>
@@ -66,7 +80,7 @@ const CustomSidebarMenu = (props, navigation) => {
                 <ScrollView>
                     {listWorkSpaces.map(item => {
                         return (
-                            <View style={{ marginBottom: 8 }}>
+                            <View key={item.id} style={{ marginBottom: 8 }}>
                                 <Icon.Button
                                     name={item.icon}
                                     backgroundColor={Theme.Theme.colors.third}
@@ -138,10 +152,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    ContentInfoDraw: {
-        flex: 0.1,
-        backgroundColor: "#ccc",
-    },
     sideMenuProfileIcon: {
         resizeMode: 'center',
         width: 100,
@@ -149,15 +159,6 @@ const styles = StyleSheet.create({
         borderRadius: 100 / 2,
         alignSelf: 'center',
         marginTop: 24
-    },
-    iconStyle: {
-        width: 15,
-        height: 15,
-        marginHorizontal: 5,
-    },
-    customItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     sideInfo: {
         margin: 10,
@@ -167,11 +168,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold"
     },
-    ButtonBoard: {
-        width: '100%',
-        height: 30,
-        backgroundColor: '#ccc'
-    }
 });
 
 export default CustomSidebarMenu;
