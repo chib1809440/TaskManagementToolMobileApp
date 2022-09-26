@@ -1,14 +1,18 @@
 import { useRoute } from '@react-navigation/native';
 import * as React from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ToastAndroid, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ToastAndroid, FlatList, Modal, Keyboard } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import theme from '../../theme/Theme'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MaterialIcons } from '@expo/vector-icons';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
 const Topic = ({ navigation: { goBack }, navigation }) => {
     const route = useRoute();
 
+    const [idModal, setIdModal] = React.useState('')
+    const [modalOpen, setModalOpen] = React.useState(false)
     const [clickedAddTopic, setclickedAddTopic] = React.useState(false)
     const [text, setText] = React.useState("");
     const [TaskList, setTaskList] = React.useState([])
@@ -30,94 +34,75 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
         }
     ]
 
-    const Task = [
-        {
-            id: 1,
-            listName: 'Todo',
-            detail: [
-                {
-                    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-                    title: 'First Item',
-                },
-                {
-                    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-                    title: 'Second Item',
-                },
-                // {
-                //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-                //     title: 'Third Item',
-                // },
-                // {
-                //     id: 'bd7acbea-c1b1-2222222-aed5-3ad53abb28ba',
-                //     title: 'First Item',
-                // },
-                // {
-                //     id: '3ac68afc-c605-43333338d3-a4f8-fbd91aa97f63',
-                //     title: 'Second Item',
-                // },
-                // {
-                //     id: '58694a0f-3da1-4444-bd96-145571e29d72',
-                //     title: 'Third Item',
-                // },
-                // {
-                //     id: 'bd7acbea-c1b1-3333444-aed5-3ad53abb28ba',
-                //     title: 'First Item',
-                // },
-                // {
-                //     id: '3ac68afc-c605-43333343434338d3-a4f8-fbd91aa97f63',
-                //     title: 'Second Item',
-                // },
-                // {
-                //     id: '58694a0f-3da1-4444434343-bd96-145571e29d72',
-                //     title: 'Third Item',
-                // },
-                // {
-                //     id: '58694a0f-3da1-4441114434343-bd96-145571e29d72',
-                //     title: 'Third Item',
-                // },
-            ]
-        },
-        // {
-        //     id: 2,
-        //     listName: 'In Progress',
-        //     detail: [
-        //         {
-        //             id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28222a',
-        //             title: 'Three Item',
-        //         },
-        //         {
-        //             id: '3ac68afc-c605-48d3-a4f8-fbd91aa973333f63',
-        //             title: 'Four Item',
-        //         },
-        //         // {
-        //         //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        //         //     title: 'Third Item',
-        //         // }
-        //     ]
-        // },
-        // {
-        //     id: 3,
-        //     listName: 'In Review',
-        //     detail: [
-        //         {
-        //             id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28222a',
-        //             title: 'Five Item',
-        //         },
-        //         {
-        //             id: '3ac68afc-c605-48d3-a4f8-fbd91aa973333f63',
-        //             title: 'Six Item',
-        //         },
-        //         // {
-        //         //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        //         //     title: 'Third Item',
-        //         // }
-        //     ]
-        // }
+    const Task = [{
+        id: 1,
+        listName: 'Todo',
+        detail: [
+            {
+                id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+                title: 'First Item',
+            },
+            {
+                id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+                title: 'Second Item',
+            },
+            {
+                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                title: 'Third Item',
+            },
+            {
+                id: 'bd7acbea-c1b1-2222222-aed5-3ad53abb28ba',
+                title: 'First Item',
+            },
+            {
+                id: '3ac68afc-c605-43333338d3-a4f8-fbd91aa97f63',
+                title: 'Second Item',
+            },
+            {
+                id: '58694a0f-3da1-4444-bd96-145571e29d72',
+                title: 'Third Item',
+            },
+            {
+                id: 'bd7acbea-c1b1-3333444-aed5-3ad53abb28ba',
+                title: 'First Item',
+            },
+            {
+                id: '3ac68afc-c605-43333343434338d3-a4f8-fbd91aa97f63',
+                title: 'Second Item',
+            },
+            {
+                id: '58694a0f-3da1-4444434343-bd96-145571e29d72',
+                title: 'Third Item',
+            },
+            {
+                id: '58694a0f-3da1-4441114434343-bd96-145571e29d72',
+                title: 'Third Item',
+            },
+        ]
+    },
+    {
+        id: 2,
+        listName: 'InProgress',
+        detail: [
+            {
+                id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+                title: 'First Item',
+            },
+            {
+                id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+                title: 'Second Item',
+            }
+        ]
+    }
     ];
     const renderItem = ({ item }) => (
         <View key={item.id} style={{ marginBottom: 6 }}>
             <TouchableOpacity
-                onPress={() => console.log("onPress", item.id)}
+                onPress={() => (
+                    console.log("onPress", item.id),
+                    setIdModal(item.id),
+                    setModalOpen(true)
+                )}
                 style={styles.item}
             >
                 <Text style={styles.title}>{item.title}</Text>
@@ -130,17 +115,65 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
     React.useEffect(() => {
         console.log("useEffect")
     }, [TaskList])
-    const onLayout = (event) => {
-        const { x, y, height, width } = event.nativeEvent.layout;
-        console.log("x: ", x)
-        console.log("y: ", y)
-        console.log("height: ", height)
-        console.log("width: ", width)
-    }
     return (
         console.log("route: ", route),
         console.log('TaskList: ', TaskList, TaskList.length),
         <SafeAreaView style={{ flex: 1 }}>
+            <Modal
+                visible={modalOpen}
+                animationType="slide"
+            >
+                <View
+                    style={{ flex: 1 }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            backgroundColor: theme.colors.third,
+                            color: "#fff"
+                        }}
+                    >
+                        <MaterialIcons
+                            name='close' size={32}
+                            color={'#fff'}
+                            onPress={() => {
+                                console.log('Add Topic')
+                                setModalOpen(false)
+                            }}
+                        />
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: "#fff"
+                            }}
+                        >
+                            {idModal}
+                        </Text>
+                        <MaterialIcons
+                            name='check' size={32}
+                            color={'#fff'}
+                            onPress={() => {
+                                console.log('Add Topic')
+                                setModalOpen(false)
+                            }}
+                        />
+                    </View>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        {/* <addTopicForm addReview={addTopicForm} /> */}
+                        <TextInput
+                            // style={globalStyles.input}
+                            placeholder='Review title'
+                            // onChangeText={props.handleChange('title')}
+                            // value={props.values.title}
+                            value={""}
+                        />
+                    </TouchableWithoutFeedback>
+                </View>
+
+            </Modal>
             <View
                 style={{
                     flexDirection: 'row',
@@ -238,12 +271,9 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={{ flex: 1 }}>
+            <View>
                 <ScrollView
-                    // contentContainerStyle={{ flexGrow: 1, height: '100%' }}
-                    // ref={(scrollView) => { this.scrollView = scrollView; }}
-                    // style={styles.container}
-                    //pagingEnabled={true}
+                    showsHorizontalScrollIndicator={false}
                     horizontal={true}
                     decelerationRate={0}
                     snapToInterval={width - 60}
@@ -254,11 +284,12 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                         bottom: 0,
                         right: 30,
                     }}>
-
                     {Task.length > 0
                         ? Task.map((taskItem) => {
                             return (
-                                <View key={taskItem.id} style={styles.view}  >
+                                <View key={taskItem.id}
+                                    style={styles.view}
+                                >
                                     <View
                                         style={{
                                             flexDirection: 'row',
@@ -290,33 +321,23 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View
-                                        onLayout={onLayout}
                                         style={{
-                                            backgroundColor: "#f2f",
+                                            // backgroundColor: "#f2f",
+                                            // height: "100%",
+                                            maxHeight: 460
                                         }}>
                                         <FlatList
+                                            showsVerticalScrollIndicator={false}
                                             data={taskItem?.detail}
                                             renderItem={renderItem}
                                             keyExtractor={item => item.id}
                                         />
-                                        {/* {taskItem?.detail.map(item => {
-                                            return (
-                                                <View key={item.id} style={{ marginBottom: 6 }}>
-                                                    <TouchableOpacity
-                                                        onPress={() => console.log("onPress", item.id)}
-                                                        style={styles.item}
-                                                    >
-                                                        <Text style={styles.title}>{item.title}</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            )
-                                        })} */}
                                     </View>
                                 </View>
                             )
-                        }) : ''
+                        })
+                        : ''
                     }
-
                     {clickedAddTopic == false
                         ?
                         <View style={styles.viewNotItem}>
@@ -427,13 +448,15 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     view: {
+        // flex: 1,
         marginVertical: 10,
         backgroundColor: theme.colors.secondary,
         width: width - 90,
         marginHorizontal: 10,
+        borderRadius: 10,
         // height: 200,
         // minHeight: 100,
-        // maxHeight: 200,
+        // maxHeight: 220,
         borderRadius: 10,
     },
     viewNotItem: {

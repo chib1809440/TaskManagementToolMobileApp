@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, ToastAndroid, Modal, StyleSheet, Keyboard } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ToastAndroid, Modal, StyleSheet, Keyboard, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Theme from '../../theme/Theme'
 import { List, Button, TextInput } from 'react-native-paper';
@@ -19,6 +19,31 @@ const MainBoard = ({ navigation }) => {
             id: 2,
             name: 'Booking',
             topic: 'Booking'
+        },
+        {
+            id: 3,
+            name: 'Payment',
+            topic: 'Payment'
+        },
+        {
+            id: 4,
+            name: 'VS',
+            topic: 'VS'
+        },
+        {
+            id: 5,
+            name: 'VS',
+            topic: 'VS'
+        },
+        {
+            id: 7,
+            name: 'VS',
+            topic: 'VS'
+        },
+        {
+            id: 8,
+            name: 'VS',
+            topic: 'VS'
         }
     ]
     return (
@@ -129,25 +154,27 @@ const MainBoard = ({ navigation }) => {
                     </Button>
                 </View>
 
-                {taskList.map(task => (
-                    <List.Item
-                        key={task.id}
-                        style={{
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#ccc"
-                        }}
-                        title={task.name}
-                        description={task.topic}
-                        left={props => <List.Icon {...props} icon="tag" />}
-                        onPress={() => {
-                            console.log("onPress to switch topic screen :", task.id)
-                            navigation.navigate('Topic', {
-                                screen: 'TopicMain',
-                                params: { id: task.id, name: task.name },
-                            })
-                        }}
-                    />
-                ))}
+                <ScrollView>
+                    {taskList.map(task => (
+                        <List.Item
+                            key={task.id}
+                            style={{
+                                borderBottomWidth: 1,
+                                borderBottomColor: "#ccc"
+                            }}
+                            title={task.name}
+                            description={task.topic}
+                            left={props => <List.Icon {...props} icon="tag" />}
+                            onPress={() => {
+                                console.log("onPress to switch topic screen :", task.id)
+                                navigation.navigate('Topic', {
+                                    screen: 'TopicMain',
+                                    params: { id: task.id, name: task.name },
+                                })
+                            }}
+                        />
+                    ))}
+                </ScrollView>
             </View>
         </SafeAreaView >
     );

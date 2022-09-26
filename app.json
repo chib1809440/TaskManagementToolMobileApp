@@ -1,39 +1,37 @@
 {
-  "expo": {
-    "name": "TaskManagementMobileApp",
-    "slug": "TaskManagementMobileApp",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./src/assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.tmchi1410.TaskManagementMobileApp"
-    },
-    "web": {
-      "favicon": "./src/assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "00caeef9-d97d-47ea-9673-ca82d989f32c"
-      }
-    }
-  }
+	"expo": {
+		"name": "TaskTime",
+		"slug": "TaskTime",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./src/assets/logo.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./src/assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./src/assets/logo.png",
+				"backgroundColor": "#FFFFFF"
+			},
+			"package": "com.tmchi1410.TaskManagementMobileApp"
+		},
+		"web": {
+			"favicon": "./src/assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "00caeef9-d97d-47ea-9673-ca82d989f32c"
+			}
+		}
+	}
 }
