@@ -20,8 +20,6 @@ const CustomSidebarMenu = (props, navigation) => {
         { id: 2, "name": 'Video-Service', icon: 'camera' },
         { id: 3, "name": 'Sphera', icon: 'camera' },
         { id: 4, "name": 'Sphera xxxxx', icon: 'camera' },
-        // { id: 5, "name": 'Sphera xxxxx', icon: 'camera' },
-        // { id: 6, "name": 'Sphera xxxxx', icon: 'camera' },
     ]
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -84,7 +82,7 @@ const CustomSidebarMenu = (props, navigation) => {
                                 <Icon.Button
                                     name={item.icon}
                                     backgroundColor={Theme.Theme.colors.third}
-                                    onPress={() => null}
+                                    onPress={() => props.navigation.navigate('MainBoard', { workSpaceId: item.id })}
                                 >
                                     {item.name}
                                 </Icon.Button>

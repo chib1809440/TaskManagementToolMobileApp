@@ -7,7 +7,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import addTopicForm from '../Form/AddTopic'
 import { Formik } from 'formik';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
 const MainBoard = ({ navigation }) => {
+    const route = useRoute()
     const [modalOpen, setModalOpen] = React.useState(false)
     const taskList = [
         {
@@ -47,6 +49,7 @@ const MainBoard = ({ navigation }) => {
         }
     ]
     return (
+        console.log("route.params: ", route),
         <SafeAreaView style={{ flex: 1 }}>
             <Modal visible={modalOpen} animationType='slide'>
                 <View
@@ -111,7 +114,7 @@ const MainBoard = ({ navigation }) => {
                         backgroundColor: Theme.colors.third,
                     }}
                 >
-                    <Text style={{ marginLeft: 8, color: '#fff' }}>T-Building's Workspace</Text>
+                    <Text style={{ marginLeft: 8, color: '#fff' }}>{route.params?.workSpaceId || 'T-Buiding Wordspace'} </Text>
                     <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
                         onPress={() => {
