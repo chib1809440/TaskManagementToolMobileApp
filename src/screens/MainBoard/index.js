@@ -46,6 +46,11 @@ const MainBoard = ({ navigation }) => {
             id: 8,
             name: 'VS',
             topic: 'VS'
+        },
+        {
+            id: 9,
+            name: '9',
+            topic: '9'
         }
     ]
     return (
@@ -114,7 +119,9 @@ const MainBoard = ({ navigation }) => {
                         backgroundColor: Theme.colors.third,
                     }}
                 >
-                    <Text style={{ marginLeft: 8, color: '#fff' }}>{route.params?.workSpaceId || 'T-Buiding Wordspace'} </Text>
+                    <Text
+                        style={{ marginLeft: 8, color: '#fff' }}>{route.params?.workSpaceId || 'T-Buiding Workspace'}
+                    </Text>
                     <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
                         onPress={() => {
@@ -130,40 +137,14 @@ const MainBoard = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        height: 40,
-                        alignItems: 'center',
-                        backgroundColor: '#fff',
-                    }}
-                >
-                    <Text>
-                        Total number of topics available: {taskList.length}
-                    </Text>
-                    <Button
-                        icon="plus"
-                        mode="elevated"
-                        onPress={() => {
-                            console.log('Add Topic')
-                            setModalOpen(true)
-                        }}
-                        style={{
-                            backgroundColor: Theme.colors.third
-                        }}
-                    >
-                        Add Topic
-                    </Button>
-                </View>
-
-                <ScrollView>
+                <ScrollView style={{ backgroundColor: Theme.colors.background }}>
                     {taskList.map(task => (
                         <List.Item
                             key={task.id}
                             style={{
                                 borderBottomWidth: 1,
-                                borderBottomColor: "#ccc"
+                                borderBottomColor: "#ccc",
+                                backgroundColor: Theme.colors.background,
                             }}
                             title={task.name}
                             description={task.topic}
@@ -178,6 +159,40 @@ const MainBoard = ({ navigation }) => {
                         />
                     ))}
                 </ScrollView>
+
+                <View
+                    style={{
+                        position: 'absolute',
+                        width: 80,
+                        right: 20,
+                        bottom: 10,
+                        height: 38,
+                        borderRadius: 30,
+                    }}
+                >
+                    <TouchableOpacity
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: Theme.colors.primary,
+                            alignItems: 'center',
+                            borderRadius: 30,
+                        }}
+                        onPress={() => {
+                            console.log('Add Topic')
+                            setModalOpen(true)
+                        }}
+                    >
+                        <Icon
+                            name='plus'
+                            type='font-awesome'
+                            color={'#fff'}
+                            style={{
+                                marginTop: 8
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView >
     );

@@ -45,14 +45,14 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                 id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
                 title: 'First Item',
             },
-            // {
-            //     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-            //     title: 'Second Item',
-            // },
-            // {
-            //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-            //     title: 'Third Item',
-            // },
+            {
+                id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+                title: 'Second Item',
+            },
+            {
+                id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                title: 'Third Item',
+            },
             // {
             //     id: 'bd7acbea-c1b1-2222222-aed5-3ad53abb28ba',
             //     title: 'First Item',
@@ -167,8 +167,9 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         {/* <addTopicForm addReview={addTopicForm} /> */}
                         <TextInput
-                            // style={globalStyles.input}
+                            style={{ backgroundColor: '#fff' }}
                             placeholder='Review title'
+
                             // onChangeText={props.handleChange('title')}
                             // value={props.values.title}
                             value={""}
@@ -286,7 +287,9 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                         left: 30,
                         bottom: 0,
                         right: 30,
-                    }}>
+                    }}
+                    style={{ height: '100%' }}
+                >
                     {Task.length > 0
                         ? Task.map((taskItem) => {
                             return (
@@ -298,7 +301,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                         {addTag == true && taskItem.id == addTagID
                                             ? <View style={{
                                                 flexDirection: 'row',
-                                                marginTop: 4
+                                                marginTop: 4,
                                             }}>
                                                 <TouchableOpacity
                                                     style={{
@@ -331,6 +334,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                                     style={{
                                                         flex: 10,
                                                         height: 38,
+                                                        backgroundColor: '#fff'
                                                     }}
                                                 />
                                                 <TouchableOpacity
@@ -396,7 +400,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                                         size={20}
                                                         name='plus'
                                                         type='font-awesome'
-                                                        color={'#fff'}
+                                                        color={'#62bd4e'}
                                                     />
                                                 </TouchableOpacity>
                                             </View>
@@ -424,7 +428,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     {clickedAddTopic == false
                         ?
                         <View style={styles.viewNotItem}>
-                            <Button
+                            {/* <Button
                                 icon="plus"
                                 mode="contained"
                                 onPress={() => {
@@ -434,11 +438,26 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                 }}
                                 style={{
                                     width: '100%',
-                                    backgroundColor: theme.colors.third
+                                    backgroundColor: theme.colors.third,
                                 }}
                             >
-                                Add Topic
-                            </Button>
+                            </Button> */}
+                            <TouchableOpacity
+                                // style={{ paddingHorizontal: 8 }}
+                                onPress={() => {
+                                    setclickedAddTopic(true)
+                                    console.log('Add Topic')
+                                    // setModalOpen(true)
+                                }}
+                            >
+                                <Text style={{ color: theme.colors.primary }}>Thêm danh sách</Text>
+                                {/* <Icon
+                                    size={20}
+                                    name='plus'
+                                    type='font-awesome'
+                                    color={'#62bd4e'}
+                                /> */}
+                            </TouchableOpacity>
                         </View>
                         :
                         <View style={styles.viewAddTopicInput}>
@@ -472,6 +491,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                 style={{
                                     flex: 10,
                                     height: 38,
+                                    backgroundColor: '#fff'
                                     // borderTopLeftRadius: 10,
                                     // borderTopRightRadius: 10
                                 }}
@@ -517,7 +537,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
 };
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: '#fffa',
+        backgroundColor: '#fff',
         marginVertical: 4,
         marginHorizontal: 10,
         borderRadius: 4,
@@ -527,35 +547,33 @@ const styles = StyleSheet.create({
     },
     title: {
         marginHorizontal: 8,
-        color: '#fff'
+        color: '#000'
     },
     view: {
         // flex: 1,
         marginVertical: 10,
-        backgroundColor: theme.colors.secondary,
+        backgroundColor: theme.colors.third,
         width: width - 90,
         marginHorizontal: 10,
         borderRadius: 10,
-        // height: 200,
-        // minHeight: 100,
-        // maxHeight: 220,
         borderRadius: 10,
     },
     viewNotItem: {
         marginVertical: 10,
-        backgroundColor: theme.colors.secondary,
+        backgroundColor: theme.colors.third,
         width: width - 90,
         marginHorizontal: 10,
         height: 38,
         borderRadius: 10,
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "center",
     },
     viewAddTopicInput: {
         flexDirection: 'row',
         alignItems: "center",
         justifyContent: 'space-between',
         marginVertical: 10,
-        backgroundColor: theme.colors.secondary,
+        backgroundColor: theme.colors.third,
         width: width - 90,
         marginHorizontal: 10,
         height: 38,

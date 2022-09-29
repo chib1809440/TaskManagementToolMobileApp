@@ -21,6 +21,11 @@ const CustomSidebarMenu = (props, navigation) => {
         { id: 3, "name": 'Sphera', icon: 'camera' },
         { id: 4, "name": 'Sphera xxxxx', icon: 'camera' },
     ]
+    const info = {
+        displayName: 'Thái Minh Chí',
+        tag: '@tmchi',
+        email: 'tmchi@tma.com.vn'
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.individualInfo}>
@@ -29,41 +34,40 @@ const CustomSidebarMenu = (props, navigation) => {
                     style={styles.sideMenuProfileIcon}
                 />
                 <View style={styles.sideInfo}>
-                    <Text style={styles.sideTextInfo} >Thái Minh Chí</Text>
-                    <Text >@tmchi</Text>
-                    <Text >tmchi@tma.com.vn</Text>
+                    <Text style={styles.sideTextInfo}>{info.displayName}</Text>
+                    <Text style={{ color: '#fff' }}>{info.tag}</Text>
+                    <Text style={{ color: '#fff' }}>{info.email}</Text>
                 </View>
-                <View style={{ marginHorizontal: 10 }}>
-                    <Icon.Button
-                        name="trello"
-                        backgroundColor={Theme.Theme.colors.third}
-                        onPress={() => {
-                            console.log("on press on boards")
-                            props.navigation.navigate('Boards')
-                        }}
-                    >
-                        Boards
-                    </Icon.Button>
-                </View>
-                <View style={{ marginHorizontal: 10, marginTop: 8 }}>
-                    <Icon.Button
-                        name="list"
-                        backgroundColor={Theme.Theme.colors.third}
-                        onPress={() => {
-                            console.log("on press on My Tash")
-                            props.navigation.navigate('MyTask')
-                        }}
-                    >
-                        My Task
-                    </Icon.Button>
-                </View>
+            </View>
+
+            <View style={{ marginHorizontal: 10 }}>
+                <Icon.Button
+                    name="trello"
+                    backgroundColor={Theme.Theme.colors.third}
+                    onPress={() => {
+                        console.log("on press on boards")
+                        props.navigation.navigate('Boards')
+                    }}
+                >
+                    Boards
+                </Icon.Button>
+            </View>
+            <View style={{ marginHorizontal: 10, marginTop: 8 }}>
+                <Icon.Button
+                    name="list"
+                    backgroundColor={Theme.Theme.colors.third}
+                    onPress={() => {
+                        console.log("on press on My Tash")
+                        props.navigation.navigate('MyTask')
+                    }}
+                >
+                    My Task
+                </Icon.Button>
             </View>
 
             <View style={styles.WorkspacesInfo}>
                 <View style={styles.WorkspacesInfoText}>
-                    <Text
-                        style={{ fontSize: 18, fontWeight: "bold" }}
-                    >
+                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                         Workspaces
                         <Text
                             style={{
@@ -75,7 +79,8 @@ const CustomSidebarMenu = (props, navigation) => {
                         </Text>
                     </Text>
                 </View>
-                <ScrollView>
+
+                <ScrollView showsVerticalScrollIndicator={false}>
                     {listWorkSpaces.map(item => {
                         return (
                             <View key={item.id} style={{ marginBottom: 8 }}>
@@ -132,9 +137,11 @@ const CustomSidebarMenu = (props, navigation) => {
 
 const styles = StyleSheet.create({
     individualInfo: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        paddingBottom: 10
+        // borderBottomWidth: 1,
+        // borderBottomColor: '#ccc',
+        paddingBottom: 10,
+        backgroundColor: Theme.Theme.colors.third,
+        marginBottom: 10
     },
     WorkspacesInfo: {
         marginHorizontal: 10,
@@ -164,7 +171,8 @@ const styles = StyleSheet.create({
     },
     sideTextInfo: {
         fontSize: 18,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        color: '#fff'
     },
 });
 

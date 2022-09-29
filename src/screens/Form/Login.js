@@ -60,7 +60,7 @@ export default function Login({ navigation }) {
             BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     }, [backPressCount]);
     return (
-        <ScrollView>
+        <ScrollView style={{ backgroundColor: '#fff' }}>
             <View style={Theme.StyleCommon.Form}>
                 <Image
                     source={CarImage}
@@ -70,16 +70,15 @@ export default function Login({ navigation }) {
                     fontStyle: 'italic', textAlign: 'center', paddingTop: 40, paddingBottom: 20,
                     marginBottom: 50
                 }}>
-                    <Title style={{ fontSize: 50, color: Theme.Theme.colors.primary }}>
+                    <Title style={{ fontSize: 50, color: Theme.Theme.colors.third }}>
                         Task
                         <Title style={{ fontSize: 50, color: '#202c45' }}>Time</Title>
                     </Title>
                 </Title>
                 <Title style={{ textAlign: 'center', fontSize: 28, marginBottom: 10 }}>
-                    Đăng Nhập
+                    Login
                 </Title>
                 <TextInput
-                    style={Theme.StyleCommon.TextInput}
                     name="email"
                     label="Email"
                     autoCapitalize='none'
@@ -106,8 +105,8 @@ export default function Login({ navigation }) {
                     {formik.touched.password && formik.errors.password}
                 </HelperText>
                 <Button mode="contained"
-                    color={Theme.Theme.colors.primary}
-                    style={{ marginBottom: 20 }}
+                    // backgroundColor={ 'red'}
+                    style={{ marginBottom: 20, backgroundColor: Theme.Theme.colors.primary }}
                     dark={true}
                     labelStyle={{ padding: 5 }}
                     // onPress={formik.handleSubmit}>
@@ -116,11 +115,16 @@ export default function Login({ navigation }) {
                         navigation.navigate('MainScreen'))}>
                     Đăng nhập
                 </Button>
-                <Button mode="text"
-                    color={Theme.Theme.colors.primary}
-                    onPress={() => navigation.navigate('Register')}>
-                    Chưa có tài khoản? Đăng kí
-                </Button>
+                <View
+                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                >
+                    <Text> Chưa có tài khoản?</Text>
+                    <Button mode="text"
+                        color={Theme.Theme.colors.third}
+                        onPress={() => navigation.navigate('Register')}>
+                        Đăng kí
+                    </Button>
+                </View>
             </View>
         </ScrollView >
     )

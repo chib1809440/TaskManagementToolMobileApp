@@ -6,11 +6,10 @@ import Screens from './src/screens'
 
 export default function App() {
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{ marginTop: 24 }}>
       <PaperProvider theme={theme}>
         <Screens />
       </PaperProvider>
     </SafeAreaProvider>
   )
-
 }

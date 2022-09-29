@@ -46,7 +46,7 @@ function BoardsScreen({ navigation }) {
                 //     <NavigationDrawerStructure navigationProps={navigation} />
                 // ),
                 headerStyle: {
-                    backgroundColor: theme.colors.primary, //Set Header color
+                    backgroundColor: theme.colors.primary,
                 },
                 headerTintColor: '#fff',
                 headerTitleStyle: {
@@ -57,7 +57,7 @@ function BoardsScreen({ navigation }) {
                 name="MainBoard"
                 component={MainBoard}
                 options={{
-                    title: 'MainBoard', //Set Header Title
+                    title: 'MainBoard',
                     headerShown: false,
                 }}
             />
@@ -65,7 +65,7 @@ function BoardsScreen({ navigation }) {
                 name="Menu WorkSpaces"
                 component={WorkSpaces}
                 options={{
-                    title: 'Menu WorkSpaces', //Set Header Title
+                    title: 'Menu WorkSpaces',
                     headerStyle: { height: 40, backgroundColor: theme.colors.third },
                     headerRight: () => (
                         <TouchableOpacity
@@ -89,7 +89,7 @@ function BoardsScreen({ navigation }) {
                 name="SettingWorkSpaces"
                 component={SettingWorkSpaces}
                 options={{
-                    title: 'Setting WorkSpaces', //Set Header Title
+                    title: 'Setting WorkSpaces',
                     headerShown: true,
                     headerStyle: { height: 40, backgroundColor: theme.colors.third },
                 }}
@@ -118,7 +118,7 @@ function TopicScreen({ navigation }) {
                 name="TopicMain"
                 component={Topic}
                 options={{
-                    title: 'Topic', //Set Header Title
+                    title: 'Topic',
                     headerShown: false,
                 }}
             />
@@ -139,7 +139,7 @@ function DrawerNavigation() {
     return (
         <Drawer.Navigator
             screenOptions={{
-                headerShown: true,
+                headerShown: false,
                 activeTintColor: theme.colors.third,
                 itemStyle: { marginVertical: 5 },
             }}

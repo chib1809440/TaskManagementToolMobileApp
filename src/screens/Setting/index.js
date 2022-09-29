@@ -8,7 +8,7 @@ const SettingSystem = ({ navigation }) => {
         {
             id: '1',
             title: 'Đăng Xuất',
-            navigate: 'Loading'
+            navigate: 'Login'
         },
         {
             id: '2',
@@ -22,19 +22,23 @@ const SettingSystem = ({ navigation }) => {
         }
     ]
     const renderItem = ({ item }) => (
-        <View key={item.id} style={{ marginBottom: 6 }}>
+        <View
+            key={item.id}
+            style={{ backgroundColor: theme.colors.background, marginBottom: 6 }}
+        >
             <TouchableOpacity
                 onPress={() => (
-                    console.log("onPress", item.id)
+                    console.log("onPress", item.id, item.navigate),
+                    navigation.navigate(item.navigate)
                 )}
                 style={{
-                    backgroundColor: theme.colors.third,
+                    backgroundColor: theme.colors.background,
                     marginVertical: 4,
                     marginHorizontal: 10,
                     borderRadius: 4,
                     height: 38,
                     flexDirection: 'row',
-                    alignItems: 'center'
+                    alignItems: 'center',
                 }}
             >
                 <Text style={{
@@ -45,13 +49,13 @@ const SettingSystem = ({ navigation }) => {
                     {item.title}
                 </Text>
             </TouchableOpacity>
-        </View>
+        </View >
     );
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background, }}>
             <View style={{ flex: 1 }}>
                 <Text
-                    style={{ marginLeft: 10, color: theme.colors.third, fontSize: 16 }}
+                    style={{ marginLeft: 16, marginVertical: 10, color: theme.colors.primary, fontSize: 16 }}
                 >
                     Tổng Quan
                 </Text>

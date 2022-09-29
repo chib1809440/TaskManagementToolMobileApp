@@ -104,7 +104,7 @@ export default function Register({ navigation }) {
                     fontStyle: 'italic', textAlign: 'center', paddingTop: 40, paddingBottom: 20,
                     marginBottom: 50
                 }}>
-                    <Title style={{ fontSize: 50, color: Theme.Theme.colors.primary }}>
+                    <Title style={{ fontSize: 50, color: Theme.Theme.colors.third }}>
                         Task
                         <Title style={{ fontSize: 50, color: '#202c45' }}>Time</Title>
                     </Title>
@@ -216,14 +216,14 @@ export default function Register({ navigation }) {
                 </HelperText>
                 <Button mode="contained"
                     style={{ marginBottom: 20 }}
-                    color={Theme.Theme.colors.secondary}
+                    color={Theme.Theme.colors.third}
                     dark={true}
                     labelStyle={{ padding: 5 }}
                     onPress={formik.handleSubmit}>
                     Đăng kí
                 </Button>
                 <Button mode="text"
-                    color={Theme.Theme.colors.primary}
+                    color={Theme.Theme.colors.third}
                     onPress={() => navigation.navigate('Login')}>
                     Đăng nhập với tài khoản
                 </Button>
