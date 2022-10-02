@@ -27,6 +27,9 @@
 			"eas": {
 				"projectId": "00caeef9-d97d-47ea-9673-ca82d989f32c"
 			}
+		},
+		"expo": {
+			"userInterfaceStyle": "automatic"
 		}
 	}
 }

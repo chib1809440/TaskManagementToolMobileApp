@@ -127,6 +127,7 @@ export default function RoomChat({ navigation }) {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={styles.container}>
                 <FlatList
+                    showsVerticalScrollIndicator={false}
                     style={{ backgroundColor: '#f2f2ff' }}
                     inverted={true}
                     data={JSON.parse(JSON.stringify(messages)).reverse()}

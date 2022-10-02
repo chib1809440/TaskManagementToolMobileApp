@@ -1,12 +1,13 @@
 import { useRoute } from '@react-navigation/native';
-import * as React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ToastAndroid, FlatList, Modal, Keyboard } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import theme from '../../theme/Theme'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { KeyboardAvoidingView } from 'react-native';
+import { FontAwesome, AntDesign, MaterialIcons, Octicons } from '@expo/vector-icons'
+import DropDownPicker from 'react-native-dropdown-picker'
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 const { width, height } = Dimensions.get('window');
 const Topic = ({ navigation: { goBack }, navigation }) => {
@@ -19,6 +20,53 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
     const [clickedAddTopic, setclickedAddTopic] = React.useState(false)
     const [text, setText] = React.useState("");
     const [TaskList, setTaskList] = React.useState([])
+    //Modal
+    const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+
+    const [description, setDescription] = React.useState('')
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState([]);
+    const [items, setItems] = useState([
+        { id: 1, label: 'Thái Minh Chí', value: 'Thái Minh Chí' },
+        { id: 2, label: 'tmchi', value: 'tmchi' },
+        { id: 3, label: 'tmchi111', value: 'tmchi1111' },
+    ]);
+
+    const [startdate, setStartDate] = useState(new Date());
+    const [isOpenStartDate, setIsOpenStartDate] = useState(false);
+    const setChangeStartDate = ((event, date) => {
+        console.log("event:", event, "setStartDate:", date);
+        setIsOpenStartDate(false)
+        setStartDate(date)
+    })
+    // useEffect(() => {
+    //     console.log("isOpenStartDate: ", isOpenStartDate)
+    // }, [isOpenStartDate])
+    // useEffect(() => {
+    //     console.log("startdate: ", startdate)
+    // }, [startdate, deadlinedate])
+    const [deadlinedate, setDeadlineDate] = useState(new Date());
+    const [isOpenDeadlineDate, setIsOpenDeadlineDate] = useState(false);
+    const setChangeDeadlineDate = (event, date) => {
+        console.log("event:", event, "setDeadlineDate:", date);
+        setIsOpenDeadlineDate(false)
+        setDeadlineDate(date)
+    }
+    function padTo2Digits(num) {
+        return num.toString().padStart(2, '0');
+    }
+    function formatDateTime(d) {
+        return (
+            [d.getMonth() + 1,
+            d.getDate(),
+            d.getFullYear()].join('/') + ' ' +
+            [d.getHours(),
+            d.getMinutes(),
+            d.getSeconds()].join(':')
+        );
+    }
+
+    //Modal
     const getTopic = [
         {
             id: 1,
@@ -99,7 +147,9 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
     }
     ];
     const renderItem = ({ item }) => (
-        <View key={item.id} style={{ marginBottom: 6 }}>
+        <View key={item.id} style={{
+            marginBottom: 6,
+        }}>
             <TouchableOpacity
                 onPress={() => (
                     console.log("onPress", item.id),
@@ -115,9 +165,10 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
     function componentDidMount() {
         setTimeout(() => { this.scrollView.scrollTo({ x: -30 }) }, 1) // scroll view position fix
     }
-    React.useEffect(() => {
-        console.log("useEffect")
-    }, [Task])
+    // React.useEffect(() => {
+    //     console.log("useEffect")
+    //     console.log("value: ", value)
+    // }, [value])
     return (
         console.log("route: ", route),
         console.log('TaskList: ', TaskList, TaskList.length),
@@ -134,50 +185,255 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                             flexDirection: 'row',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            backgroundColor: theme.colors.third,
-                            color: "#fff"
+                            backgroundColor: theme.colors.background,
+                            // color: "#000"
+                            height: 50,
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#ccc',
+
+                            shadowColor: "#000",
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3.84,
+
+                            elevation: 5,
                         }}
                     >
                         <MaterialIcons
                             name='close' size={32}
-                            color={'#fff'}
+                            color={'#000'}
                             onPress={() => {
                                 console.log('Add Topic')
                                 setModalOpen(false)
                             }}
+                            style={{ marginHorizontal: 2 }}
                         />
-                        <Text
+                        <View
                             style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: "#fff"
-                            }}
-                        >
-                            {idModal}
-                        </Text>
-                        <MaterialIcons
-                            name='check' size={32}
-                            color={'#fff'}
-                            onPress={() => {
-                                console.log('Add Topic')
-                                setModalOpen(false)
-                            }}
-                        />
+                                alignItems: 'center',
+                                width: 240,
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 18,
+                                }}
+                                numberOfLines={1} >
+                                Tên tag
+                            </Text>
+                            <Text
+                                numberOfLines={1}>
+                                {idModal} xxxxxxxxx
+                            </Text>
+                        </View>
+                        <FontAwesome name="ellipsis-v" size={24} color="black"
+                            style={{ marginHorizontal: 10 }} />
                     </View>
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        {/* <addTopicForm addReview={addTopicForm} /> */}
-                        <TextInput
-                            style={{ backgroundColor: '#fff' }}
-                            placeholder='Review title'
 
-                            // onChangeText={props.handleChange('title')}
-                            // value={props.values.title}
-                            value={""}
-                        />
-                    </TouchableWithoutFeedback>
+                    <View style={{ flex: 1, backgroundColor: '#f3f5f7' }}>
+
+                        {/* <SelectDropdown
+                            data={countries}
+                            onSelect={(selectedItem, index) => {
+                                console.log(selectedItem, index)
+                            }}
+                            buttonTextAfterSelection={(selectedItem, index) => {
+                                return selectedItem
+                            }}
+                            rowTextForSelection={(item, index) => {
+                                return item
+                            }}
+                        /> */}
+                        {/* description */}
+                        <View
+                            style={{
+                                width: '100%',
+                                height: 58,
+                                backgroundColor: theme.colors.background,
+                                marginTop: 10,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+
+                            }}>
+                            <MaterialIcons name="description" size={24} color="black" style={styles.icon} />
+                            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                                <TextInput
+                                    underlineColorAndroid="transparent"
+                                    style={{ backgroundColor: '#fff', width: 280 }}
+                                    placeholder='Add tag description'
+                                    value={description}
+                                    onChangeText={description => setDescription(description)}
+                                />
+                            </TouchableWithoutFeedback>
+                        </View>
+
+                        <View style={{ position: 'relative' }}>
+                            {/* Members */}
+                            <View
+                                style={{
+                                    width: '100%',
+                                    height: 58,
+                                    backgroundColor: theme.colors.background,
+                                    marginTop: 10,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    zIndex: 2
+                                }}>
+                                <Octicons name="person" size={24} color="black" style={{ marginHorizontal: 12 }} />
+                                <View style={{ zIndex: 10 }}>
+                                    <DropDownPicker
+                                        listItemLabelStyle={{
+                                            color: "#000",
+                                            borderBottomWidth: 1,
+                                            borderBottomColor: '#ccc'
+                                        }}
+                                        flatListProps={{
+                                            initialNumToRender: 3
+                                        }}
+                                        maxHeight={200}
+                                        dropDownContainerStyle={{
+                                            backgroundColor: '#ddd',
+                                            borderWidth: 0,
+                                        }}
+                                        // dropDownDirection={'TOP'}
+                                        placeholder="Members..."
+                                        placeholderStyle={{
+                                            color: "grey",
+                                            fontWeight: "300",
+                                            marginLeft: 8,
+                                            fontSize: 16,
+                                        }}
+                                        style={{ width: 290, borderWidth: 0 }}
+                                        open={open}
+                                        value={value}
+                                        items={items}
+                                        setOpen={setOpen}
+                                        setValue={setValue}
+                                        setItems={setItems}
+                                        key={(id) => key.id}
+                                        // defaultValue={items[0]}
+                                        multiple={true}
+                                        mode="BADGE"
+                                        badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
+                                    />
+                                </View>
+                            </View>
+
+                            {/* Date */}
+                            <View
+                                style={{
+                                    width: '100%',
+                                    height: 116,
+                                    backgroundColor: theme.colors.background,
+                                    marginTop: 10,
+                                    zIndex: 0
+                                }}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center'
+                                    }}>
+                                    <AntDesign name="clockcircleo" size={24} color="black" style={styles.icon} />
+                                    <View style={{ flex: 1 }}>
+                                        <View style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                            width: 280
+                                            // justifyContent: 'fles',
+                                        }}>
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    width: '100%',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between'
+                                                }}
+                                            >
+                                                {isOpenStartDate &&
+                                                    <Text style={{}}>
+                                                        <RNDateTimePicker mode={'date'} value={startdate} onChange={setChangeStartDate} />;
+                                                    </Text>}
+                                                <TouchableOpacity
+                                                    onPress={() => { setIsOpenStartDate(true) }}
+                                                >
+                                                    <Text style={{ fontSize: 16 }}>Ngày bắt đầu : </Text>
+                                                </TouchableOpacity>
+                                                <Text style={{ fontSize: 16, color: '#000', fontWeight: 'bold' }}>{formatDateTime(startdate)}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+
+                                </View>
+                                <View
+                                    style={{
+                                        borderTopWidth: 0.5,
+                                        borderTopColor: '#ccc',
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center'
+                                    }}>
+                                    {/* <AntDesign name="clockcircleo" size={24} color="black" style={styles.icon} /> */}
+                                    <View style={{ flex: 1, marginLeft: 44 }}>
+                                        <View style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                            width: 280
+                                        }}>
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    width: '100%',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between'
+                                                }}
+                                            >
+                                                {isOpenDeadlineDate &&
+                                                    <Text style={{ flex: 1, borderWidth: 1, height: 50 }}>
+                                                        <RNDateTimePicker value={deadlinedate} onChange={setChangeDeadlineDate} />;
+                                                    </Text>}
+                                                <TouchableOpacity
+                                                    onPress={() => { setIsOpenDeadlineDate(true) }}
+                                                >
+                                                    <Text style={{ fontSize: 16 }}>Ngày kết thúc: </Text>
+                                                </TouchableOpacity>
+                                                <Text style={{ fontSize: 16, color: '#000', fontWeight: 'bold' }}>{formatDateTime(deadlinedate)}</Text>
+                                            </View>
+
+                                        </View>
+                                    </View>
+
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* Activity */}
+                        <View
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: theme.colors.third,
+                                marginTop: 10,
+                                // flexDirection: 'row',
+                                // alignItems: 'center',
+                            }}>
+                            <Text
+                                style={{ fontSize: 18 }}
+                            >
+                                Hoạt động
+                            </Text>
+                        </View>
+                    </View>
                 </View>
 
             </Modal>
+
             <View
                 style={{
                     flexDirection: 'row',
@@ -275,6 +531,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
+
             <View>
                 <ScrollView
                     showsHorizontalScrollIndicator={false}
@@ -298,113 +555,23 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                         key={taskItem.id}
                                         style={styles.view}
                                     >
-                                        {addTag == true && taskItem.id == addTagID
-                                            ? <View style={{
+                                        <View
+                                            style={{
                                                 flexDirection: 'row',
-                                                marginTop: 4,
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                // marginVertical: 8,
+                                                marginHorizontal: 4,
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: '#fff',
+                                                height: 36
                                             }}>
-                                                <TouchableOpacity
-                                                    style={{
-                                                        flex: 1,
-                                                        paddingHorizontal: 8,
-                                                        height: 38,
-                                                        borderRadius: 10,
-                                                        alignItems: 'center',
-                                                        flexDirection: 'column',
-                                                        justifyContent: 'center',
-
-                                                    }}
-                                                    onPress={() => {
-                                                        setAddTag(false)
-                                                        console.log("Đóng thêm tag")
-                                                    }}
-                                                >
-                                                    <Icon
-                                                        name='close'
-                                                        type='font-awesome'
-                                                        color={'#fff'}
-                                                    />
-                                                </TouchableOpacity>
-
-                                                <TextInput
-                                                    // label="topic"
-                                                    placeholder="Nhập tên thẻ"
-                                                    value={text}
-                                                    onChangeText={text => setText(text)}
-                                                    style={{
-                                                        flex: 10,
-                                                        height: 38,
-                                                        backgroundColor: '#fff'
-                                                    }}
-                                                />
-                                                <TouchableOpacity
-                                                    style={{
-                                                        flex: 1,
-                                                        paddingHorizontal: 8,
-                                                        height: 38,
-                                                        borderRadius: 10,
-                                                        alignItems: 'center',
-                                                        flexDirection: 'column',
-                                                        justifyContent: 'center',
-
-                                                    }}
-                                                    onPress={() => {
-                                                        console.log("text: ", text, text.length)
-                                                        text.length > 0
-                                                            ? (
-                                                                {
-                                                                    this: taskItem.detail.push({
-                                                                        id: Math.floor(Math.random() * 10),
-                                                                        title: text
-                                                                    })
-                                                                },
-                                                                console.log("Đã thêm thẻ", taskItem.detail),
-                                                                setAddTag(false),
-                                                                setText('')
-                                                            )
-                                                            : ToastAndroid.show('Tên thẻ không được rỗng!', ToastAndroid.SHORT);
-                                                    }}
-                                                >
-                                                    <Icon
-                                                        name='check'
-                                                        type='font-awesome'
-                                                        color={'#fff'}
-                                                    />
-                                                </TouchableOpacity>
-                                            </View>
-                                            : <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    alignItems: 'center',
-                                                    // marginVertical: 8,
-                                                    marginHorizontal: 4,
-                                                    borderBottomWidth: 1,
-                                                    borderBottomColor: '#fff',
-                                                    height: 36
-                                                }}>
-                                                <Text style={{
-                                                    marginHorizontal: 8,
-                                                    color: '#fff',
-                                                    fontSize: 20
-                                                }}>{taskItem.listName}</Text>
-                                                <TouchableOpacity
-                                                    style={{ paddingHorizontal: 8 }}
-                                                    onPress={() => {
-                                                        console.log("onPress add tag: ", taskItem.id)
-                                                        setAddTag(true)
-                                                        setAddTagId(taskItem.id)
-                                                    }}
-                                                >
-                                                    <Icon
-                                                        size={20}
-                                                        name='plus'
-                                                        type='font-awesome'
-                                                        color={'#62bd4e'}
-                                                    />
-                                                </TouchableOpacity>
-                                            </View>
-                                        }
+                                            <Text style={{
+                                                marginHorizontal: 8,
+                                                color: '#fff',
+                                                fontSize: 20
+                                            }}>{taskItem.listName}</Text>
+                                        </View>
 
                                         <View
                                             style={{
@@ -417,7 +584,121 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                                 keyExtractor={item => item.id}
                                             />
 
+                                            {addTag == true && taskItem.id == addTagID
+                                                ? <View style={{
+                                                    flexDirection: 'row',
+                                                    // marginVertical: 0,
+                                                    paddingVertical: 4,
+                                                    borderTopWidth: 1,
+                                                    borderTopColor: '#fff'
+                                                }}>
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            flex: 1,
+                                                            paddingHorizontal: 8,
+                                                            height: 38,
+                                                            borderRadius: 10,
+                                                            alignItems: 'center',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'center',
 
+                                                        }}
+                                                        onPress={() => {
+                                                            setAddTag(false)
+                                                            console.log("Đóng thêm tag")
+                                                        }}
+                                                    >
+                                                        <Icon
+                                                            name='close'
+                                                            type='font-awesome'
+                                                            color={'#fff'}
+                                                        />
+                                                    </TouchableOpacity>
+
+                                                    <TextInput
+                                                        // label="topic"
+                                                        placeholder="Nhập tên thẻ"
+                                                        value={text}
+                                                        onChangeText={text => setText(text)}
+                                                        style={{
+                                                            flex: 10,
+                                                            height: 38,
+                                                            backgroundColor: '#fff'
+                                                        }}
+                                                    />
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            flex: 1,
+                                                            paddingHorizontal: 8,
+                                                            height: 38,
+                                                            borderRadius: 10,
+                                                            alignItems: 'center',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'center',
+
+                                                        }}
+                                                        onPress={() => {
+                                                            console.log("text: ", text, text.length)
+                                                            text.length > 0
+                                                                ? (
+                                                                    {
+                                                                        this: taskItem.detail.push({
+                                                                            id: Math.floor(Math.random() * 10),
+                                                                            title: text
+                                                                        })
+                                                                    },
+                                                                    console.log("Đã thêm thẻ", taskItem.detail),
+                                                                    setAddTag(false),
+                                                                    setText('')
+                                                                )
+                                                                : ToastAndroid.show('Tên thẻ không được rỗng!', ToastAndroid.SHORT);
+                                                        }}
+                                                    >
+                                                        <Icon
+                                                            name='check'
+                                                            type='font-awesome'
+                                                            color={'#fff'}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                : <View
+                                                    style={{
+                                                        marginHorizontal: 4,
+                                                        borderTopWidth: 1,
+                                                        borderTopColor: '#fff',
+                                                        height: 36,
+
+                                                    }}>
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            height: '100%',
+                                                            paddingHorizontal: 8,
+                                                            flexDirection: 'row',
+                                                            // justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                            // backgroundColor: 'red'
+                                                        }}
+                                                        onPress={() => {
+                                                            console.log("onPress add tag: ", taskItem.id)
+                                                            setAddTag(true)
+                                                            setAddTagId(taskItem.id)
+                                                        }}
+                                                    >
+                                                        <Icon
+                                                            size={20}
+                                                            name='plus'
+                                                            type='font-awesome'
+                                                            color={'#fff'}
+                                                        />
+                                                        <Text
+                                                            style={{
+                                                                color: '#fff',
+                                                                fontSize: 16,
+                                                                marginHorizontal: 4
+                                                            }}>Add tag</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            }
                                         </View>
                                     </View>
                                 </View>
@@ -428,20 +709,6 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     {clickedAddTopic == false
                         ?
                         <View style={styles.viewNotItem}>
-                            {/* <Button
-                                icon="plus"
-                                mode="contained"
-                                onPress={() => {
-                                    setclickedAddTopic(true)
-                                    console.log('Add Topic')
-                                    // setModalOpen(true)
-                                }}
-                                style={{
-                                    width: '100%',
-                                    backgroundColor: theme.colors.third,
-                                }}
-                            >
-                            </Button> */}
                             <TouchableOpacity
                                 // style={{ paddingHorizontal: 8 }}
                                 onPress={() => {
@@ -450,13 +717,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                     // setModalOpen(true)
                                 }}
                             >
-                                <Text style={{ color: theme.colors.primary }}>Thêm danh sách</Text>
-                                {/* <Icon
-                                    size={20}
-                                    name='plus'
-                                    type='font-awesome'
-                                    color={'#62bd4e'}
-                                /> */}
+                                <Text style={{ color: theme.colors.background }}>Thêm danh sách</Text>
                             </TouchableOpacity>
                         </View>
                         :
@@ -578,6 +839,15 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         height: 38,
         borderRadius: 10,
+    },
+    icon: {
+        marginHorizontal: 10
+    },
+    text: {
+        // marginHorizontal: 10,
+        fontSize: 18,
+        fontWeight: '100',
+        fontStyle: 'italic',
     }
 });
 export default Topic;

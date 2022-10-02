@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import addTopicForm from '../Form/AddTopic'
 import { Formik } from 'formik';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, DrawerActions } from '@react-navigation/native';
 const MainBoard = ({ navigation }) => {
     const route = useRoute()
     const [modalOpen, setModalOpen] = React.useState(false)
@@ -109,6 +109,51 @@ const MainBoard = ({ navigation }) => {
 
             </Modal>
 
+            <View
+                style={{
+                    width: '100%',
+                    height: 50,
+                    backgroundColor: Theme.colors.third,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                        style={{ paddingHorizontal: 10 }}
+                        onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+                    >
+                        <Icon
+                            name='bars'
+                            type='font-awesome'
+                            color={'#fff'}
+                        />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 24, marginHorizontal: 20, color: '#fff' }}>Board</Text>
+                </View>
+                <View>
+                    <TouchableOpacity
+                        style={{ paddingHorizontal: 8 }}
+                        onPress={() => {
+                            console.log("onPress Menu Wordspace")
+                            navigation.navigate('Menu WorkSpaces')
+                        }}
+                    >
+                        <Icon
+                            name='search'
+                            type='font-awesome'
+                            color={'#fff'}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
             <View style={{ flex: 1 }}>
                 <View
                     style={{
@@ -116,11 +161,17 @@ const MainBoard = ({ navigation }) => {
                         justifyContent: 'space-between',
                         height: 40,
                         alignItems: 'center',
-                        backgroundColor: Theme.colors.third,
+                        backgroundColor: Theme.colors.background,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        overflow: 'hidden',
+                        shadowColor: '#ccc',
+                        shadowRadius: 10,
+                        shadowOpacity: 1,
                     }}
                 >
                     <Text
-                        style={{ marginLeft: 8, color: '#fff' }}>{route.params?.workSpaceId || 'T-Buiding Workspace'}
+                        style={{ marginLeft: 8, color: '#000' }}>{route.params?.workSpaceId || 'T-Buiding Workspace'}
                     </Text>
                     <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
@@ -132,7 +183,7 @@ const MainBoard = ({ navigation }) => {
                         <Icon
                             name='ellipsis-h'
                             type='font-awesome'
-                            color={'#fff'}
+                            color={'#000'}
                         />
                     </TouchableOpacity>
                 </View>
