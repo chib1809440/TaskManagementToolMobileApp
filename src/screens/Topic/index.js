@@ -1,6 +1,6 @@
-import { useRoute } from '@react-navigation/native';
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ToastAndroid, FlatList, Modal, Keyboard } from 'react-native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ToastAndroid, FlatList, Modal, Keyboard, KeyboardAvoidingView, Alert } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import theme from '../../theme/Theme'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,6 +8,13 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { FontAwesome, AntDesign, MaterialIcons, Octicons } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker'
 import RNDateTimePicker from '@react-native-community/datetimepicker';
+import { addTask, getAllListName, getMember, getActivities, getAccount, addMemberstoProject, getMemberstoProject, addList, updateTask } from '../../apis/api';
+import { Picker } from '@react-native-picker/picker';
+import axios from "axios";
+import { Pressable } from 'react-native';
+import { Formik } from 'formik';
+import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 const Topic = ({ navigation: { goBack }, navigation }) => {
@@ -15,22 +22,39 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
 
     const [addTagID, setAddTagId] = React.useState('')
     const [addTag, setAddTag] = React.useState(false);
-    const [idModal, setIdModal] = React.useState('')
+    const [infoModal, setInfoModal] = React.useState({})
     const [modalOpen, setModalOpen] = React.useState(false)
+    const [modalAddmember, setModalAddmember] = React.useState(false)
     const [clickedAddTopic, setclickedAddTopic] = React.useState(false)
     const [text, setText] = React.useState("");
-    const [TaskList, setTaskList] = React.useState([])
+    const [listTask, setListTask] = React.useState([])
     //Modal
-    const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+    const [selectedTaskType, setSelectedTaskType] = useState('')
+    const [selectedlistType, setSelectedListType] = useState('')
 
+    const [userNameAddMember, setUserNameAddMember] = useState('')
+
+    const bgColorTaskType = [
+        { type: 'New Feature', color: "#00b4d8" },
+        { type: 'Improvement', color: "#e9c46a" },
+        { type: 'QA Test', color: "#e76f51" },
+        { type: 'Bug', color: "#DC143C" },
+    ]
+    const taskType = [
+        'New Feature',
+        'Improvement',
+        'QA Test',
+        'Bug',
+    ]
+
+    function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+    const [listType, setListType] = React.useState([])
     const [description, setDescription] = React.useState('')
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState([]);
-    const [items, setItems] = useState([
-        { id: 1, label: 'Thái Minh Chí', value: 'Thái Minh Chí' },
-        { id: 2, label: 'tmchi', value: 'tmchi' },
-        { id: 3, label: 'tmchi111', value: 'tmchi1111' },
-    ]);
+    const [items, setItems] = useState([])
 
     const [startdate, setStartDate] = useState(new Date());
     const [isOpenStartDate, setIsOpenStartDate] = useState(false);
@@ -39,12 +63,6 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
         setIsOpenStartDate(false)
         setStartDate(date)
     })
-    // useEffect(() => {
-    //     console.log("isOpenStartDate: ", isOpenStartDate)
-    // }, [isOpenStartDate])
-    // useEffect(() => {
-    //     console.log("startdate: ", startdate)
-    // }, [startdate, deadlinedate])
     const [deadlinedate, setDeadlineDate] = useState(new Date());
     const [isOpenDeadlineDate, setIsOpenDeadlineDate] = useState(false);
     const setChangeDeadlineDate = (event, date) => {
@@ -59,127 +77,371 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
         return (
             [d.getMonth() + 1,
             d.getDate(),
-            d.getFullYear()].join('/') + ' ' +
-            [d.getHours(),
-            d.getMinutes(),
-            d.getSeconds()].join(':')
+            d.getFullYear()].join('-')
         );
     }
 
-    //Modal
-    const getTopic = [
-        {
-            id: 1,
-            name: 'FaceID',
-            topic: 'FaceID',
-            listTask: [
-                {
-                    id: 1.1,
-                    name: 'CRUD faceID'
-                },
-                {
-                    id: 1.2,
-                    name: 'sync faceID with MQTT'
-                }
-            ]
-        }
-    ]
-
-    const Task = [{
-        id: 1,
-        listName: 'Todo',
-        detail: [
-            {
-                id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-                title: 'First Item',
-            },
-            {
-                id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-                title: 'Second Item',
-            },
-            {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
-                title: 'Third Item',
-            },
-            // {
-            //     id: 'bd7acbea-c1b1-2222222-aed5-3ad53abb28ba',
-            //     title: 'First Item',
-            // },
-            // {
-            //     id: '3ac68afc-c605-43333338d3-a4f8-fbd91aa97f63',
-            //     title: 'Second Item',
-            // },
-            // {
-            //     id: '58694a0f-3da1-4444-bd96-145571e29d72',
-            //     title: 'Third Item',
-            // },
-            // {
-            //     id: 'bd7acbea-c1b1-3333444-aed5-3ad53abb28ba',
-            //     title: 'First Item',
-            // },
-            // {
-            //     id: '3ac68afc-c605-43333343434338d3-a4f8-fbd91aa97f63',
-            //     title: 'Second Item',
-            // },
-            // {
-            //     id: '58694a0f-3da1-4444434343-bd96-145571e29d72',
-            //     title: 'Third Item',
-            // },
-            // {
-            //     id: '58694a0f-3da1-4441114434343-bd96-145571e29d72',
-            //     title: 'Third Item',
-            // },
-        ]
-    },
-    {
-        id: 2,
-        listName: 'InProgress',
-        detail: [
-            {
-                id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-                title: 'First Item',
-            },
-            {
-                id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-                title: 'Second Item',
-            }
-        ]
+    function formatDate(m) {
+        return (
+            m.getUTCDate() + "/" + (m.getUTCMonth() + 1) + "/" + m.getUTCFullYear() + " " + m.getHours() + ":" + m.getMinutes() + ":" + m.getSeconds()
+        );
     }
-    ];
-    const renderItem = ({ item }) => (
-        <View key={item.id} style={{
+
+    const [defaultListName, setDefaultListName] = React.useState([])
+    const renderItem = ({ item, index }) => (
+        console.log("item: ", item),
+        <View key={index} style={{
             marginBottom: 6,
         }}>
             <TouchableOpacity
                 onPress={() => (
-                    console.log("onPress", item.id),
-                    setIdModal(item.id),
+                    setSelectedTaskType(item.issueType),
+                    setSelectedListType(item.listName),
+                    setItems(listMember.reduce((prev, curr) => [...prev, { label: curr.username, value: curr.username }], [])),
+                    setValue(item.assignee),
+                    setDescription(item.taskDescription),
+                    // console.log("new Date(item.startDate): ", (item.startDate), new Date(item.startDate)),
+                    // console.log("new Date(item.endDate): ", (item.endDate), new Date(item.endDate.toString())),
+                    // setStartDate(new Date(item.startDate) || new Date()),
+                    // setDeadlineDate(new Date(item.endDate) || new Date()),
+                    setInfoModal(item),
                     setModalOpen(true)
                 )}
-                style={styles.item}
+                style={{
+                    backgroundColor: (bgColorTaskType.find(type => type.type == item.issueType).color || '#fff'),
+                    marginVertical: 4,
+                    marginHorizontal: 10,
+                    borderRadius: 4,
+                    flexDirection: 'column',
+                    alignItems: 'flex-start'
+                }}
             >
-                <Text style={styles.title}>{item.title}</Text>
+                <View style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                }}>
+                    <Text style={{
+                        marginHorizontal: 8,
+                        color: '#000',
+                        fontSize: 18
+                    }}>{item.taskName}</Text>
+
+                    <View style={{
+                        width: 100,
+                        height: 18,
+                        // borderWidth: 1,
+                        flexDirection: 'row',
+                        overflow: 'hidden',
+                    }}>
+                        <Text
+                            numberOfLines={1}
+                            style={{
+                                // marginHorizontal: 8,
+                                color: '#000',
+                                fontSize: 12,
+                                width: '100%',
+                                // borderWidth: 1
+                            }}>{item.assignee[0]}</Text>
+                    </View>
+                </View>
+                <View style={{
+                    // borderWidth: 1,
+                    // flexDirection: 'row',
+                }}>
+                    {item.startDate ? <Text style={styles.title}> Start Date: {item.startDate}</Text> : ''}
+                    {item.endDate ? <Text style={styles.title}> End Date: {item.endDate}</Text> : ''}
+                    {item.duration ? <Text style={styles.title}> Duration: {item.duration} days</Text> : ''}
+
+                </View>
             </TouchableOpacity>
-        </View>
+        </View >
     );
     function componentDidMount() {
         setTimeout(() => { this.scrollView.scrollTo({ x: -30 }) }, 1) // scroll view position fix
     }
+
+    async function getListName() {
+        const getListName = await getAllListName(route.params.projectID)
+        setListTask(getListName)
+        setDefaultListName(getListName.reduce((prev, curr) => [...prev, { listNameId: curr._id, listName: curr.listName }], []))
+    }
+
+    const [addTaskNameInList, setAddTaskNameInList] = React.useState({})
+    React.useEffect(() => {
+        async function fetchData() {
+            const createTask = await addTask(addTaskNameInList)
+            if (createTask == 'Create Task successfully') {
+                const getListName = await getAllListName(route.params.projectID)
+                setListTask(getListName)
+            }
+        }
+        fetchData()
+    }, [addTaskNameInList]);
+
+    async function fetchData() {
+        const getListName = await getAllListName(route.params.projectID)
+        setListTask(getListName)
+        setDefaultListName(getListName.reduce((prev, curr) => [...prev, { listNameId: curr._id, listName: curr.listName }], []))
+    }
+
+    const renderAction = ({ item }) => {
+        return (
+            <View style={{ width: '100%' }}>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginHorizontal: 20,
+                    marginBottom: 0
+                    // backgroundColor: '#ccc'
+                }}>
+                    <View style={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: 10,
+                        backgroundColor: '#62bd4e',
+                    }}></View>
+                    <Text>{item.createdAt}</Text>
+                    <Text>{item.owner}</Text>
+                </View>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginHorizontal: 20,
+                    // backgroundColor: '#ccc',
+                    // marginTop: '-10px'
+                }}>
+                    <View style={{
+                        width: 2,
+                        height: '150%',
+                        backgroundColor: '#62bd4e',
+                        marginLeft: 5,
+                        position: 'relative',
+                        top: -3
+                    }}></View>
+                    <Text>Chi Thai Minh was assigned to task - "#711 : [OP] Payment on web"</Text>
+                </View>
+            </View>
+        );
+    };
+    const testActivity = [
+        {
+            "_id": "635e8187e2bb371821cbcad4",
+            "owner": "tmchi@tma.com.vn",
+            "projectId": "635369852679ce44b44de970",
+            "listNameId": "634bcfc3f7a6cfef9e240f52",
+            "taskId": "634bd9bfff5168bd77f4afd0",
+            "action": "Created Task",
+            "createAt": 1667096249689,
+            "createdAt": "2022-10-30T13:52:07.664Z",
+            "updatedAt": "2022-10-30T13:52:07.664Z",
+            "__v": 0
+        },
+        {
+            "_id": "63614dca8e52609f3c434d28",
+            "owner": "tmchi@tma.com.vn",
+            "projectId": "635369852679ce44b44de970",
+            "listNameId": "634bcfc3f7a6cfef9e240f52",
+            "taskId": "634bd9bfff5168bd77f4afd0",
+            "action": "Assigned Task",
+            "createAt": 1667096249689,
+            "createdAt": "2022-11-01T16:48:10.087Z",
+            "updatedAt": "2022-11-01T16:48:10.087Z",
+            "__v": 0
+        },
+        {
+            "_id": "63614dca8e52609f3c434d28",
+            "owner": "tmchi@tma.com.vn",
+            "projectId": "635369852679ce44b44de970",
+            "listNameId": "634bcfc3f7a6cfef9e240f52",
+            "taskId": "634bd9bfff5168bd77f4afd0",
+            "action": "Assigned Task",
+            "createAt": 1667096249689,
+            "createdAt": "2022-11-01T16:48:10.087Z",
+            "updatedAt": "2022-11-01T16:48:10.087Z",
+            "__v": 0
+        },
+        {
+            "_id": "63614dca8e52609f3c434d28",
+            "owner": "tmchi@tma.com.vn",
+            "projectId": "635369852679ce44b44de970",
+            "listNameId": "634bcfc3f7a6cfef9e240f52",
+            "taskId": "634bd9bfff5168bd77f4afd0",
+            "action": "Assigned Task",
+            "createAt": 1667096249689,
+            "createdAt": "2022-11-01T16:48:10.087Z",
+            "updatedAt": "2022-11-01T16:48:10.087Z",
+            "__v": 0
+        },
+        {
+            "_id": "63614dca8e52609f3c434d28",
+            "owner": "tmchi@tma.com.vn",
+            "projectId": "635369852679ce44b44de970",
+            "listNameId": "634bcfc3f7a6cfef9e240f52",
+            "taskId": "634bd9bfff5168bd77f4afd0",
+            "action": "Assigned Task",
+            "createAt": 1667096249689,
+            "createdAt": "2022-11-01T16:48:10.087Z",
+            "updatedAt": "2022-11-01T16:48:10.087Z",
+            "__v": 0
+        }
+    ]
+    // const [showActivity, setShowActivity] = React.useState([])
+    // setShowActivity()
+    // async function getActivity(owner) {
+    //     const getActivity = await getActivities(owner)
+    //     console.log("getActivity: ", getActivity)
+    //     // setShowActivity([...getActivity])
+    //     setShowActivity([{}])
+    //     console.log("showActivity: ", showActivity)
+    // }
+
     // React.useEffect(() => {
-    //     console.log("useEffect")
-    //     console.log("value: ", value)
-    // }, [value])
+    //     getActivity("tmchi@tma.com.vn")
+    // }, [])
+
+    React.useEffect(() => {
+        fetchData()
+    }, [route])
+    const [listAddUser, setListAddUser] = useState([])
+    const [isTrue, setIsTrue] = useState('')
+
+    async function getSearchAccount(userNameAddMember) {
+        try {
+            const username = await AsyncStorage.getItem('userName')
+            const listAccount = await getAccount(userNameAddMember, username)
+            setListAddUser(listAccount)
+        } catch (e) {
+            console.log("getSearchAccount Error:", e)
+        }
+    }
+
+    React.useEffect(() => {
+        getSearchAccount(userNameAddMember)
+    }, [userNameAddMember])
+
+    const onPressAccountSearch = (username) => {
+        if (isTrue == username) {
+            setIsTrue('')
+        } else {
+            setIsTrue(username)
+        }
+    }
+
+    const handleAddUserToProject = async (projectId, username) => {
+        if (username.length == 0) {
+            Alert.alert('Thông báo', 'Vui lòng chọn thành viên cần thêm vào dự án');
+        } else {
+            const putMembers = await addMemberstoProject(projectId, username)
+            Alert.alert('Thông báo', putMembers);
+            setSwitchListMember(!switchListMember)
+        }
+
+    }
+    const renderAddUser = ({ item, index }) => (
+        <View key={index} style={{
+            marginBottom: 6,
+            borderWidth: 1,
+            borderRadius: 10,
+            marginHorizontal: 10
+        }}>
+            <TouchableOpacity
+                onPress={() => onPressAccountSearch(item.username)}
+                style={styles.item}
+            >
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}>
+                    <Text style={{
+                        marginHorizontal: 8,
+                        color: (isTrue == item.username ? 'green' : '#000')
+                    }}>{item.username}</Text>
+                    <Feather name="check-circle"
+                        size={24}
+                        color={isTrue == item.username ? 'green' : '#000'} />
+                </View>
+            </TouchableOpacity>
+        </View >
+    );
+
+    const [switchListMember, setSwitchListMember] = React.useState(false)
+    const [listMember, setListMember] = React.useState([])
+    const handleSwitch = async projectId => {
+        try {
+            const getListMember = await getMemberstoProject(projectId)
+            setListMember(getListMember.members)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    React.useEffect(() => {
+        handleSwitch(route.params.projectID)
+    }, [switchListMember == true])
+    const rendergetUser = ({ item, index }) => (
+        <View key={index} style={{
+            marginBottom: 6,
+            borderWidth: 1,
+            borderRadius: 10,
+            marginHorizontal: 10,
+            backgroundColor: "#fff",
+        }}>
+            <TouchableOpacity>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    height: 55,
+                    backgroundColor: (item.color),
+                    borderRadius: 10,
+                }}>
+                    <Text style={{
+                        marginHorizontal: 8,
+                        color: '#000'
+                    }}>{item.username}</Text>
+                    <Text style={{
+                        marginHorizontal: 8,
+                        color: '#000'
+                    }}>{item.role}</Text>
+                    <Text style={{
+                        marginHorizontal: 8,
+                        color: '#000',
+                        numberOfLines: 1
+                    }}>{formatDate(new Date(item.dateAdded))}</Text>
+
+                </View>
+            </TouchableOpacity>
+        </View >
+    );
+
+    async function addNewListName(projectID, listName) {
+        const addNewList = await addList(projectID, listName)
+        setclickedAddTopic(false)
+        setText('')
+        fetchData()
+    }
+
+    async function putTask(data) {
+        data.listNameId = listTask.find(list => list.listName == data.listName)._id
+        const result = await updateTask({ ...data, _id: infoModal._id, })
+        if (result == 'Update Task successfully') {
+            setModalOpen(false)
+            fetchData()
+        }
+    }
     return (
-        console.log("route: ", route),
-        console.log('TaskList: ', TaskList, TaskList.length),
         <SafeAreaView style={{ flex: 1 }}>
             <Modal
                 visible={modalOpen}
                 animationType="slide"
             >
-                <View
-                    style={{ flex: 1 }}
-                >
+                <View style={{ flex: 1 }}>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -206,46 +468,98 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                             name='close' size={32}
                             color={'#000'}
                             onPress={() => {
-                                console.log('Add Topic')
+                                console.log('close modal')
                                 setModalOpen(false)
                             }}
-                            style={{ marginHorizontal: 2 }}
                         />
                         <View
                             style={{
                                 alignItems: 'center',
-                                width: 240,
+                                // borderBottomWidth: 1,
+                                width: 280,
+                                marginRight: 10
                             }}>
                             <Text
                                 style={{
                                     fontSize: 18,
                                 }}
                                 numberOfLines={1} >
-                                Tên tag
-                            </Text>
-                            <Text
-                                numberOfLines={1}>
-                                {idModal} xxxxxxxxx
+                                {infoModal.taskName}
                             </Text>
                         </View>
-                        <FontAwesome name="ellipsis-v" size={24} color="black"
-                            style={{ marginHorizontal: 10 }} />
+                        <MaterialIcons
+                            name='check' size={32}
+                            color={'#000'}
+                            onPress={() => {
+                                putTask({
+                                    listNameId: '',
+                                    listName: selectedlistType,
+                                    issueType: selectedTaskType,
+                                    taskDescription: description,
+                                    assignee: value,
+                                    startDate: formatDateTime(startdate),
+                                    endDate: formatDateTime(deadlinedate)
+                                })
+                                // setModalOpen(false)
+                            }}
+                        />
                     </View>
 
                     <View style={{ flex: 1, backgroundColor: '#f3f5f7' }}>
+                        <View
+                            style={{
+                                // borderWidth: 1,
+                                // backgroundColor: 'red',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
 
-                        {/* <SelectDropdown
-                            data={countries}
-                            onSelect={(selectedItem, index) => {
-                                console.log(selectedItem, index)
                             }}
-                            buttonTextAfterSelection={(selectedItem, index) => {
-                                return selectedItem
-                            }}
-                            rowTextForSelection={(item, index) => {
-                                return item
-                            }}
-                        /> */}
+                        >
+
+                            <View
+                                style={{
+                                    width: '50%',
+                                    borderRightWidth: 1,
+                                    borderColor: '#f3f5f7',
+                                    backgroundColor: '#fff'
+                                }}>
+
+                                <Picker
+                                    // style={{ backgroundColor: (bgColorTaskType.find(item => item.type === selectedTaskType))?.color }}
+                                    selectedValue={selectedTaskType}
+                                    onValueChange={(itemVal, indexVal) => {
+                                        setSelectedTaskType(itemVal)
+                                    }}
+                                >
+                                    {taskType.map((item, index) => {
+                                        return (<Picker.Item label={item} value={item} key={index} />)
+                                    })}
+
+                                </Picker>
+                            </View>
+                            <View
+                                style={{
+                                    width: '50%',
+                                    borderRightWidth: 1,
+                                    borderColor: '#f3f5f7',
+                                    backgroundColor: '#fff'
+                                }}>
+
+                                <Picker
+                                    // style={{ backgroundColor: (bgColorListType.find(item => item.type === selectedlistType))?.color }}
+                                    selectedValue={selectedlistType}
+                                    onValueChange={(itemVal, indexVal) => {
+                                        setSelectedListType(itemVal)
+                                    }}
+                                >
+                                    {defaultListName.map((item, index) => {
+                                        return (<Picker.Item label={item.listName} value={item.listName} key={index} />)
+                                    })}
+
+                                </Picker>
+                            </View>
+
+                        </View>
                         {/* description */}
                         <View
                             style={{
@@ -298,7 +612,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                             borderWidth: 0,
                                         }}
                                         // dropDownDirection={'TOP'}
-                                        placeholder="Members..."
+                                        placeholder="Assignee..."
                                         placeholderStyle={{
                                             color: "grey",
                                             fontWeight: "300",
@@ -312,11 +626,11 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                         setOpen={setOpen}
                                         setValue={setValue}
                                         setItems={setItems}
-                                        key={(id) => key.id}
+                                        key={(id) => key.id.toString()}
                                         // defaultValue={items[0]}
                                         multiple={true}
                                         mode="BADGE"
-                                        badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
+                                        badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4", "#e9cc"]}
                                     />
                                 </View>
                             </View>
@@ -355,15 +669,17 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                                 }}
                                             >
                                                 {isOpenStartDate &&
-                                                    <Text style={{}}>
-                                                        <RNDateTimePicker mode={'date'} value={startdate} onChange={setChangeStartDate} />;
+                                                    <Text style={{ position: 'relative', left: -20 }}>
+                                                        <RNDateTimePicker mode={'date'} value={startdate} onChange={setChangeStartDate} />
                                                     </Text>}
                                                 <TouchableOpacity
+                                                    style={{ height: '100%', width: '72%', marginTop: 40 }}
                                                     onPress={() => { setIsOpenStartDate(true) }}
                                                 >
-                                                    <Text style={{ fontSize: 16 }}>Ngày bắt đầu : </Text>
+                                                    <Text style={{ fontSize: 16 }}>Chọn ngày bắt đầu : </Text>
                                                 </TouchableOpacity>
                                                 <Text style={{ fontSize: 16, color: '#000', fontWeight: 'bold' }}>{formatDateTime(startdate)}</Text>
+
                                             </View>
                                         </View>
                                     </View>
@@ -395,13 +711,15 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                                 }}
                                             >
                                                 {isOpenDeadlineDate &&
-                                                    <Text style={{ flex: 1, borderWidth: 1, height: 50 }}>
-                                                        <RNDateTimePicker value={deadlinedate} onChange={setChangeDeadlineDate} />;
-                                                    </Text>}
+                                                    <Text>
+                                                        <RNDateTimePicker value={deadlinedate} onChange={setChangeDeadlineDate} />
+                                                    </Text>
+                                                }
                                                 <TouchableOpacity
+                                                    style={{ height: '100%', width: '72%', marginTop: 40 }}
                                                     onPress={() => { setIsOpenDeadlineDate(true) }}
                                                 >
-                                                    <Text style={{ fontSize: 16 }}>Ngày kết thúc: </Text>
+                                                    <Text style={{ fontSize: 16 }}>Chọn ngày kết thúc: </Text>
                                                 </TouchableOpacity>
                                                 <Text style={{ fontSize: 16, color: '#000', fontWeight: 'bold' }}>{formatDateTime(deadlinedate)}</Text>
                                             </View>
@@ -417,23 +735,200 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                         <View
                             style={{
                                 width: '100%',
-                                height: '100%',
-                                backgroundColor: theme.colors.third,
+                                height: 242,
+                                backgroundColor: '#fff',
                                 marginTop: 10,
                                 // flexDirection: 'row',
                                 // alignItems: 'center',
                             }}>
                             <Text
-                                style={{ fontSize: 18 }}
+                                style={{ fontSize: 18, margin: 6 }}
                             >
                                 Hoạt động
                             </Text>
+                            <FlatList
+                                // style={{ backgroundColor: "#ccc" }}
+                                data={testActivity}
+                                renderItem={renderAction}
+                                keyExtractor={(item) => item.id}
+                            // extraData={selectedId}
+                            />
                         </View>
                     </View>
+
+
                 </View>
+
 
             </Modal>
 
+            <Modal
+                animationType="slide"
+                // transparent={true}
+                visible={modalAddmember}
+                onRequestClose={() => {
+                    setModalOpen(!modalAddmember);
+                }}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0,0,0,0.5)'
+                    }}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    height: 40,
+                                    // backgroundColor: '#ccc',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    borderBottomWidth: 1,
+                                    borderColor: '#ccc',
+                                    backgroundColor: '#0179c0'
+                                }}
+                            >
+                                <Pressable
+                                    style={{
+                                        marginLeft: 10
+                                    }}
+                                    onPress={() => {
+                                        setIsTrue('')
+                                        setListAddUser([])
+                                        setUserNameAddMember('')
+                                        setModalAddmember(!modalAddmember)
+                                    }}
+                                >
+                                    <AntDesign name="close" size={24} color="#fff" />
+                                </Pressable>
+                                {switchListMember == false
+                                    ? <View>
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            fontSize: 18,
+                                            // borderBottomWidth: 1,
+                                            color: '#fff',
+                                            fontWeight: 'bold'
+                                        }}>Thêm thành viên vào dự án</Text>
+                                    </View>
+                                    : <View>
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            fontSize: 18,
+                                            // borderBottomWidth: 1,
+                                            fontWeight: 'bold',
+                                            color: '#fff'
+                                        }}>Danh sách thành viên </Text>
+                                    </View>}
+                                {switchListMember == false
+                                    ? <Pressable
+                                        style={{
+                                            marginRight: 10
+                                        }}
+                                        onPress={() => {
+                                            console.log("list")
+                                            setSwitchListMember(!switchListMember)
+                                        }}
+                                    >
+                                        <Feather name="list" size={24} color="#fff" />
+                                    </Pressable>
+                                    : <Pressable
+                                        style={{
+                                            marginRight: 10
+                                        }}
+                                        onPress={() => {
+                                            console.log("list")
+                                            setSwitchListMember(!switchListMember)
+                                        }}
+                                    >
+                                        <AntDesign name="adduser" size={24} color="#fff" />
+                                    </Pressable>}
+
+                            </View>
+
+                            {switchListMember == false
+                                ? <View
+                                    style={{
+                                        width: '100%',
+                                        height: '84%',
+                                    }}
+                                >
+                                    <View style={{
+                                        width: '100%',
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                    }}>
+                                        <Text style={{
+                                            color: '#0179c0',
+                                            marginHorizontal: 16,
+                                            fontSize: 16,
+                                            position: 'relative',
+                                            top: -4,
+                                            flex: 1
+                                        }}>Username</Text>
+                                        <TextInput
+                                            style={{
+                                                marginHorizontal: 16, backgroundColor: '#fff',
+                                                flex: 3
+                                            }}
+                                            value={userNameAddMember}
+                                            placeholderTextColor="#ccc"
+                                            onChangeText={(userNameAddMember) => {
+                                                setUserNameAddMember(userNameAddMember)
+                                            }}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            maxHeight: '89%',
+                                            // borderWidth: 1,
+                                            marginTop: '2%',
+                                            borderColor: '#ccc',
+                                        }}
+                                    >
+                                        <FlatList
+                                            data={listAddUser}
+                                            renderItem={renderAddUser}
+                                            keyExtractor={(item) => item.id}
+                                        // extraData={selectedId}
+                                        />
+                                        <View style={{ height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
+                                            <Pressable
+                                                style={[styles.button, styles.buttonClose]}
+                                                onPress={() => handleAddUserToProject(route.params.projectID, isTrue)}
+                                            >
+                                                <Text style={{
+                                                    color: "white",
+                                                    fontWeight: "bold",
+                                                    textAlign: "center"
+                                                }}>Add User to Project</Text>
+                                            </Pressable>
+                                        </View>
+
+                                    </View>
+                                </View>
+                                : <View style={{
+                                    width: '100%',
+                                    height: '92%',
+                                    marginTop: 10
+                                }}>
+                                    <FlatList
+                                        data={listMember}
+                                        renderItem={rendergetUser}
+                                        keyExtractor={(item) => item.id}
+                                    />
+                                </View>}
+
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
             <View
                 style={{
                     flexDirection: 'row',
@@ -449,8 +944,12 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
                         onPress={() => {
+                            // setListTask([])
                             console.log("onPress back list mainBoard")
-                            goBack()
+                            navigation.navigate('Boards', {
+                                screen: 'MainBoard',
+                                params: {},
+                            })
                         }}
                     >
                         <Icon
@@ -462,7 +961,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     </TouchableOpacity>
                     <Text
                         style={{ marginLeft: 8, color: '#fff', fontSize: 24 }}>
-                        {route.params.name} - {route.params.id}
+                        {route.params.tagNameProject}
                     </Text>
                 </View>
 
@@ -487,7 +986,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                             color={'#fff'}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
                         onPress={() => {
                             // navigation.navigate('TestTopic')
@@ -500,7 +999,7 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                             type='font-awesome'
                             color={'#fff'}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
                         onPress={() => {
@@ -515,25 +1014,21 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                             color={'#fff'}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    {route.params.currentUser == route.params.owner ? <TouchableOpacity
                         style={{ paddingHorizontal: 8 }}
                         onPress={() => {
-                            // navigation.navigate('onPress Menu Wordspace')
-                            console.log("onPress notification Topic")
+                            console.log("onPress add member")
+                            setModalAddmember(true)
                         }}
                     >
-                        <Icon
-                            size={20}
-                            name='ellipsis-h'
-                            type='font-awesome'
-                            color={'#fff'}
-                        />
-                    </TouchableOpacity>
+                        <AntDesign name="addusergroup" size={24} color={'#fff'} />
+                    </TouchableOpacity> : ''}
                 </View>
             </View>
 
             <View>
                 <ScrollView
+                    // key={listTask.length}
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}
                     decelerationRate={0}
@@ -547,12 +1042,12 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                     }}
                     style={{ height: '100%' }}
                 >
-                    {Task.length > 0
-                        ? Task.map((taskItem) => {
+                    {listTask.length > 0
+                        ? listTask.map((taskItem, index) => {
                             return (
                                 <View>
                                     <View
-                                        key={taskItem.id}
+                                        key={index}
                                         style={styles.view}
                                     >
                                         <View
@@ -575,19 +1070,18 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
 
                                         <View
                                             style={{
-                                                maxHeight: 462
+                                                maxHeight: 520
                                             }}>
                                             <FlatList
                                                 showsVerticalScrollIndicator={false}
-                                                data={taskItem?.detail}
+                                                data={taskItem?.tasks}
                                                 renderItem={renderItem}
                                                 keyExtractor={item => item.id}
                                             />
 
-                                            {addTag == true && taskItem.id == addTagID
+                                            {addTag == true && taskItem._id == addTagID
                                                 ? <View style={{
                                                     flexDirection: 'row',
-                                                    // marginVertical: 0,
                                                     paddingVertical: 4,
                                                     borderTopWidth: 1,
                                                     borderTopColor: '#fff'
@@ -638,17 +1132,13 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
 
                                                         }}
                                                         onPress={() => {
-                                                            console.log("text: ", text, text.length)
+                                                            console.log("text: ", text)
+                                                            console.log("addTagID: ", addTagID)
                                                             text.length > 0
                                                                 ? (
-                                                                    {
-                                                                        this: taskItem.detail.push({
-                                                                            id: Math.floor(Math.random() * 10),
-                                                                            title: text
-                                                                        })
-                                                                    },
-                                                                    console.log("Đã thêm thẻ", taskItem.detail),
+                                                                    setAddTaskNameInList({ listNameId: addTagID, taskName: text }),
                                                                     setAddTag(false),
+                                                                    setAddTagId(''),
                                                                     setText('')
                                                                 )
                                                                 : ToastAndroid.show('Tên thẻ không được rỗng!', ToastAndroid.SHORT);
@@ -679,9 +1169,9 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                                             // backgroundColor: 'red'
                                                         }}
                                                         onPress={() => {
-                                                            console.log("onPress add tag: ", taskItem.id)
+                                                            console.log("onPress add tag: ", taskItem._id)
                                                             setAddTag(true)
-                                                            setAddTagId(taskItem.id)
+                                                            setAddTagId(taskItem._id)
                                                         }}
                                                     >
                                                         <Icon
@@ -773,12 +1263,9 @@ const Topic = ({ navigation: { goBack }, navigation }) => {
                                     console.log("text: ", text, text.length)
                                     text.length > 0
                                         ? (
-                                            setTaskList([...TaskList, {
-                                                id: 1,
-                                                listName: text,
-                                                detail: []
-                                            }]),
-                                            console.log("Đã thêm List Topic")
+                                            console.log("Đã thêm List Topic: ", { projectID: route.params.projectID, listName: text }),
+                                            addNewListName(route.params.projectID, text)
+
                                         )
                                         : ToastAndroid.show('Tên danh sách không được rỗng!', ToastAndroid.SHORT);
                                 }}
@@ -811,7 +1298,6 @@ const styles = StyleSheet.create({
         color: '#000'
     },
     view: {
-        // flex: 1,
         marginVertical: 10,
         backgroundColor: theme.colors.third,
         width: width - 90,
@@ -848,6 +1334,43 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '100',
         fontStyle: 'italic',
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        // marginTop: 22
+    },
+    modalView: {
+        // margin: 10,
+        backgroundColor: "#fff",
+        // borderRadius: 20,
+        // padding: 100,
+        width: '100%',
+        height: '100%',
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    button: {
+        width: '40%',
+        height: 40,
+        borderRadius: 20,
+        padding: 10,
+        marginTop: 30
+        // elevation: 2
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
 });
 export default Topic;

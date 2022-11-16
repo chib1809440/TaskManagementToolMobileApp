@@ -7,30 +7,32 @@ import {
     Text,
     ScrollView,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Theme from '../theme/'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CustomSidebarMenu = (props, navigation) => {
-    const BASE_PATH =
-        'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';
-    const proileImage = 'react_logo.png';
-    const logo = '../assets/myLove.png'
-    const listWorkSpaces = [
-        { id: 1, "name": 'T-Building', icon: 'building' },
-        { id: 2, "name": 'Video-Service', icon: 'camera' },
-        { id: 3, "name": 'Sphera', icon: 'camera' },
-        { id: 4, "name": 'Sphera xxxxx', icon: 'camera' },
-    ]
-    const info = {
-        displayName: 'Thái Minh Chí',
-        tag: '@tmchi',
-        email: 'tmchi@tma.com.vn'
+    const [info, setInfo] = React.useState({})
+    async function getData() {
+        try {
+            const fullName = await AsyncStorage.getItem('fullName')
+            const userName = await AsyncStorage.getItem('userName')
+            const tagName = await AsyncStorage.getItem('tagName')
+            setInfo({ ...info, displayName: fullName, email: userName, tag: `@${tagName}` })
+        } catch (e) {
+            console.log(e)
+        }
     }
+
+    React.useEffect(() => {
+        getData()
+    }, [])
     return (
+        console.log("info: ", info),
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.individualInfo}>
                 <Image
-                    source={require('../assets/myLove.png')}
+                    source={require('../assets/no-avatar.png')}
                     style={styles.sideMenuProfileIcon}
                 />
                 <View style={styles.sideInfo}>
@@ -42,14 +44,26 @@ const CustomSidebarMenu = (props, navigation) => {
 
             <View style={{ marginHorizontal: 10 }}>
                 <Icon.Button
-                    name="trello"
+                    name="tag"
                     backgroundColor={Theme.Theme.colors.third}
                     onPress={() => {
-                        console.log("on press on boards")
+                        console.log("on press on Project")
                         props.navigation.navigate('Boards')
                     }}
                 >
-                    Boards
+                    Project
+                </Icon.Button>
+            </View>
+            <View style={{ marginHorizontal: 10, marginTop: 8 }}>
+                <Icon.Button
+                    name="bar-chart-o"
+                    backgroundColor={Theme.Theme.colors.third}
+                    onPress={() => {
+                        console.log("on press on My Tash")
+                        props.navigation.navigate('Overview')
+                    }}
+                >
+                    Overview
                 </Icon.Button>
             </View>
             <View style={{ marginHorizontal: 10, marginTop: 8 }}>
@@ -61,13 +75,13 @@ const CustomSidebarMenu = (props, navigation) => {
                         props.navigation.navigate('MyTask')
                     }}
                 >
-                    My Task
+                    Tasks
                 </Icon.Button>
             </View>
-
+            {/* 
             <View style={styles.WorkspacesInfo}>
-                <View style={styles.WorkspacesInfoText}>
-                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                <View style={styles.WorkspacesInfoText}> */}
+            {/* <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                         Workspaces
                         <Text
                             style={{
@@ -77,29 +91,32 @@ const CustomSidebarMenu = (props, navigation) => {
                             }}>
                             ({listWorkSpaces.length})
                         </Text>
-                    </Text>
-                </View>
+                    </Text> */}
+            {/* </View> */}
 
-                <ScrollView showsVerticalScrollIndicator={false}>
+            {/* <ScrollView showsVerticalScrollIndicator={false}>
                     {listWorkSpaces.map(item => {
                         return (
-                            <View key={item.id} style={{ marginBottom: 8 }}>
+                            <View key={item._id} style={{ marginBottom: 8 }}>
                                 <Icon.Button
-                                    name={item.icon}
+                                    name={'building'}
                                     backgroundColor={Theme.Theme.colors.third}
-                                    onPress={() => props.navigation.navigate('MainBoard', { workSpaceId: item.id })}
+                                    onPress={() => props.navigation.navigate('MainBoard', { workSpaceId: item._id })}
                                 >
-                                    {item.name}
+                                    {item.projectName}
                                 </Icon.Button>
                             </View>
                         )
                     })}
-                </ScrollView>
-            </View>
+                </ScrollView> */}
+            {/* </View> */}
 
             <View style={{
                 flex: 1,
                 marginTop: 10,
+                borderTopWidth: 1,
+                borderTopColor: "#ccc",
+                paddingTop: 10
             }}>
                 <View style={{ marginHorizontal: 10, marginBottom: 8 }}>
                     <Icon.Button
@@ -163,7 +180,7 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 100 / 2,
         alignSelf: 'center',
-        marginTop: 24
+        marginTop: 24,
     },
     sideInfo: {
         margin: 10,

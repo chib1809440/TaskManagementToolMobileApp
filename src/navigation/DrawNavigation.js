@@ -9,6 +9,7 @@ import WorkSpaces from '../screens/WorkSpaces';
 import SettingWorkSpaces from '../screens/WorkSpaces/Setting';
 import SettingSystem from '../screens/Setting';
 import MyTask from '../screens/MyTask';
+import Overview from '../screens/Overview';
 import Help from '../screens/Help';
 import RoomChat from '../screens/Topic/RoomChat';
 import theme from '../theme/Theme'
@@ -152,6 +153,11 @@ function DrawerNavigation() {
                 name="Boards"
                 options={{ drawerLabel: 'Board' }}
                 component={BoardsScreen}
+            />
+            <Drawer.Screen
+                name="Overview"
+                options={{ drawerLabel: 'Overview' }}
+                component={Overview}
             />
             <Drawer.Screen
                 name="MyTask"

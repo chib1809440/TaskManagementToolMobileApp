@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import Theme from '../../theme';
 import CarImage from '../../assets/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import FormApi from '../../api/formApi';
+import { login } from '../../apis/api';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -15,31 +15,51 @@ export default function Login({ navigation }) {
     const [passwordSecured, setPasswordSecured] = useState(false)
     const [backPressCount, setBackPressCount] = useState(0)
     const loginSchema = Yup.object().shape({
-        email: Yup.string()
+        username: Yup.string()
             .min(3, 'Quá ngắn!')
             .max(50, 'Quá dài!')
             .required('Vui lòng nhập tên của bạn'),
         password: Yup.string().required('Vui lòng nhập mật khẩu')
     });
+
+    async function toLogin(data) {
+        const member = await login(data)
+        console.log("member: ", member)
+        if (member != null) {
+            try {
+                await AsyncStorage.setItem('userName', member.username);
+                await AsyncStorage.setItem('fullName', member.fullName);
+                await AsyncStorage.setItem('tagName', member.tagName);
+                navigation.navigate('MainScreen')
+            } catch (e) {
+                console.log(e)
+            }
+        } else {
+            Alert.alert('Thông báo', 'Có lỗi xảy ra khi đăng nhập, sai tên tài khoản hoặc mật khẩu!');
+        }
+    }
+
     const formik = useFormik({
         initialValues: {
-            email: '',
+            username: '',
             password: '',
         },
         validationSchema: loginSchema,
         onSubmit: (values) => {
-            FormApi.login(values).then(res => {
-                AsyncStorage.setItem('token', res.accessToken);
-                AsyncStorage.setItem('refreshToken', res.refreshToken);
-                FormApi.getInfoCustomer().then(res => {
-                    AsyncStorage.setItem('role', res.roles);
-                    navigation.navigate('Home', { data: res.roles });
-                }).catch(err => {
-                    console.log(err);
-                });
-            }).catch(err => {
-                Alert.alert('Thông báo', 'Có lỗi xảy ra khi đăng nhập, sai tên tài khoản hoặc mật khẩu!');
-            });
+            console.log(values);
+            toLogin(values)
+            // FormApi.login(values).then(res => {
+            // AsyncStorage.setItem('token', res.accessToken);
+            // AsyncStorage.setItem('refreshToken', res.refreshToken);
+            //     FormApi.getInfoCustomer().then(res => {
+            //         AsyncStorage.setItem('role', res.roles);
+            //         navigation.navigate('Home', { data: res.roles });
+            //     }).catch(err => {
+            //         console.log(err);
+            //     });
+            // }).catch(err => {
+            // Alert.alert('Thông báo', 'Có lỗi xảy ra khi đăng nhập, sai tên tài khoản hoặc mật khẩu!');
+            // });
         },
     });
     const handleBackPress = useCallback(() => {
@@ -59,8 +79,23 @@ export default function Login({ navigation }) {
         return () =>
             BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     }, [backPressCount]);
+
+
+    async function clearAll() {
+        try {
+            await AsyncStorage.clear()
+        } catch (e) {
+            console.log(e)
+        }
+        console.log('Done.')
+    }
+
+    useEffect(() => {
+        clearAll()
+    }, [])
     return (
-        <ScrollView style={{ backgroundColor: '#fff' }}>
+        < ScrollView style={{ backgroundColor: '#fff' }
+        }>
             <View style={Theme.StyleCommon.Form}>
                 <Image
                     source={CarImage}
@@ -79,17 +114,17 @@ export default function Login({ navigation }) {
                     Login
                 </Title>
                 <TextInput
-                    name="email"
-                    label="Email"
+                    name="username"
+                    label="Username"
                     autoCapitalize='none'
-                    keyboardType="email-address"
+                    keyboardType="username-address"
                     mode="outlined"
-                    value={formik.values.email}
-                    onBlur={formik.handleBlur('email')}
-                    onChangeText={(text) => formik.setFieldValue('email', text)}
+                    value={formik.values.username}
+                    onBlur={formik.handleBlur('username')}
+                    onChangeText={(text) => formik.setFieldValue('username', text)}
                 />
-                <HelperText type="error" visible={formik.touched.email && Boolean(formik.errors.email)}>
-                    {formik.touched.email && formik.errors.email}
+                <HelperText type="error" visible={formik.touched.username && Boolean(formik.errors.username)}>
+                    {formik.touched.username && formik.errors.username}
                 </HelperText>
                 <TextInput
                     name="password"
@@ -109,10 +144,10 @@ export default function Login({ navigation }) {
                     style={{ marginBottom: 20, backgroundColor: Theme.Theme.colors.primary }}
                     dark={true}
                     labelStyle={{ padding: 5 }}
-                    // onPress={formik.handleSubmit}>
-                    onPress={() => (
+                    onPress={formik.handleSubmit}>
+                    {/* onPress={() => (
                         console.log("onPress Button Login -> MainScreen"),
-                        navigation.navigate('MainScreen'))}>
+                        navigation.navigate('MainScreen'))}> */}
                     Đăng nhập
                 </Button>
                 <View
