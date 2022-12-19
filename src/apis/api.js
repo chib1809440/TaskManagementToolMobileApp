@@ -1,5 +1,5 @@
 import axios from "axios";
-const localhost = '192.168.1.9:5000'
+const localhost = '192.168.43.217:5000'
 
 export async function login(data) {
     try {
@@ -54,7 +54,6 @@ export async function addProject(data) {
         if (response.status !== 200) {
             throw new Error("axios faild");
         }
-        console.log("addProject: ", response.data)
         return response.data;
     } catch (e) {
         console.log(e);
@@ -64,7 +63,6 @@ export async function addProject(data) {
 
 export async function getProjectInfo(username) {
     try {
-        console.log("getProjectInfo: ", username)
         const response = await axios({
             url: `http://${localhost}/api/v1/app/projects?member=${username}`,
             method: 'GET',
@@ -142,25 +140,6 @@ export async function addTask(data) {
     }
 }
 
-export async function getActivities(owner) {
-    try {
-        const response = await axios({
-            url: `http://${localhost}/api/v1/app/activity/?owner=${owner}`,
-            method: 'GET',
-            header: {
-                'Content-Type': 'application/json',
-            },
-        });
-        if (response.status !== 200) {
-            throw new Error("axios faild");
-        }
-        return response.data;
-    } catch (e) {
-        console.log(e);
-        return { error: e.message };
-    }
-}
-
 export async function addMemberstoProject(projectId, username) {
     try {
         const response = await axios({
@@ -231,6 +210,7 @@ export async function addList(projectID, listName) {
 
 export async function updateTask(data) {
     try {
+        console.log("updateTask API: ", data)
         const response = await axios({
             url: `http://${localhost}/api/v1/app/tasks`,
             method: 'PUT',
@@ -246,5 +226,128 @@ export async function updateTask(data) {
     } catch (e) {
         console.log(e);
         return { error: e.message };
+    }
+}
+
+export async function getActivities(taskId) {
+    try {
+        const response = await axios({
+            url: `http://${localhost}/api/v1/app/activity/?taskId=${taskId}`,
+            method: 'GET',
+            header: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (response.status !== 200) {
+            throw new Error("axios faild");
+        }
+        return response.data;
+    } catch (e) {
+        console.log(e);
+        return { error: e.message };
+    }
+}
+
+export async function saveActivity(data) {
+    try {
+        const response = await axios({
+            url: `http://${localhost}/api/v1/app/activity`,
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json',
+            },
+            data: data
+        });
+        if (response.status !== 200) {
+            throw new Error("axios faild");
+        }
+        console.log("saveActivity: ", response.data)
+        return response.data;
+    } catch (e) {
+        console.log(e);
+        return { error: e.message };
+    }
+}
+
+export async function updateAccount(data) {
+    try {
+        const response = await axios({
+            url: `http://${localhost}/api/v1/app/accounts`,
+            method: 'PUT',
+            header: {
+                'Content-Type': 'application/json',
+            },
+            data: data
+        });
+        if (response.status !== 200) {
+            throw new Error("axios faild");
+        }
+        return response.data;
+    } catch (e) {
+        console.log(e);
+        return { error: e.message };
+    }
+}
+
+export async function getStatusRate(projectId) {
+    try {
+        const response = await axios({
+            url: `http://${localhost}/api/v1/app/statistical/status-rate?projectId=${projectId}`,
+            method: 'GET',
+            header: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+        if (response.status !== 200) {
+            throw new Error("axios faild");
+        }
+
+        return response.data;
+    } catch (e) {
+        console.log(e);
+        return { error: e.message }
+    }
+}
+
+export async function statisticalMember(projectId) {
+    try {
+        const response = await axios({
+            url: `http://${localhost}/api/v1/app/statistical/members?projectId=${projectId}`,
+            method: 'GET',
+            header: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+        if (response.status !== 200) {
+            throw new Error("axios faild");
+        }
+
+        return response.data;
+    } catch (e) {
+        console.log(e);
+        return { error: e.message }
+    }
+}
+
+export async function statisticalTask(projectId) {
+    try {
+        const response = await axios({
+            url: `http://${localhost}/api/v1/app/statistical/tasks?projectId=${projectId}`,
+            method: 'GET',
+            header: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+        if (response.status !== 200) {
+            throw new Error("axios faild");
+        }
+
+        return response.data;
+    } catch (e) {
+        console.log(e);
+        return { error: e.message }
     }
 }

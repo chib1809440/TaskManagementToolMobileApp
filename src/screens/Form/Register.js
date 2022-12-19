@@ -110,13 +110,13 @@ export default function Register({ navigation }) {
                     </Title>
                 </Title>
                 <Title style={{ textAlign: 'center', fontSize: 28 }}>
-                    Đăng kí tài khoản mới
+                    Sign up
                 </Title>
 
                 <TextInput
                     style={Theme.StyleCommon.TextInput}
                     name="lastName"
-                    label="Họ"
+                    label="Tên đầy đủ"
                     mode="outlined"
                     value={formik.values.lastName}
                     onBlur={formik.handleBlur('lastName')}
@@ -125,7 +125,7 @@ export default function Register({ navigation }) {
                 <HelperText type="error" visible={formik.touched.lastName && Boolean(formik.errors.lastName)}>
                     {formik.touched.lastName && formik.errors.lastName}
                 </HelperText>
-                <TextInput
+                {/* <TextInput
                     style={Theme.StyleCommon.TextInput}
                     name="firstName"
                     label="Tên"
@@ -136,7 +136,7 @@ export default function Register({ navigation }) {
                 />
                 <HelperText type="error" visible={formik.touched.firstName && Boolean(formik.errors.firstName)}>
                     {formik.touched.firstName && formik.errors.firstName}
-                </HelperText>
+                </HelperText> */}
 
                 <TouchableOpacity
                     activeOpaticy={1}
@@ -180,7 +180,7 @@ export default function Register({ navigation }) {
                 <TextInput
                     style={Theme.StyleCommon.TextInput}
                     name="email"
-                    label="Email"
+                    label="Username"
                     keyboardType="email-address"
                     mode="outlined"
                     value={formik.values.email}
@@ -227,7 +227,7 @@ export default function Register({ navigation }) {
                     onPress={() => navigation.navigate('Login')}>
                     Đăng nhập với tài khoản
                 </Button>
-                <GoogleLogin redirect={handleRedirect} />
+                {/* <GoogleLogin redirect={handleRedirect} /> */}
             </View>
         </ScrollView>
     )

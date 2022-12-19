@@ -21,27 +21,22 @@ export default function RoomChat({ navigation }) {
     // const route = useRoute()
 
     const [chatUser] = useState({
-        name: 'Robert Henry',
-        profile_image: 'https://randomuser.me/api/portraits/men/0.jpg',
+        name: 'BAS',
+        profile_image: 'https://media.istockphoto.com/id/1351571961/photo/looking-directly-up-at-the-skyline-of-the-financial-district-in-central-london.jpg?b=1&s=170667a&w=0&k=20&c=ScoPcmVztzvi771qPgGSvhA50WDt7gOM7361Ei0ODww=',
         last_seen: 'online',
     });
 
     const [currentUser] = useState({
-        name: 'John Doe',
+        name: 'tmchi',
     });
 
     const [messages, setMessages] = useState([
-        { sender: 'John Doe', message: 'Hey there!', time: '6:01 PM' },
+        { sender: 'tmchi', message: 'Dạ mng ơi, ngày mai 10h mình discuss lại cái feature [OP] Payment nha!', time: '6:01 PM' },
         {
-            sender: 'Robert Henry',
-            message: 'Hello, how are you doing?',
+            sender: 'nhhoa',
+            message: 'Dạ oki ạ',
             time: '6:02 PM',
         },
-        {
-            sender: 'John Doe',
-            message: 'I am good, how about you?',
-            time: '6:02 PM',
-        }
     ]);
 
     const [inputMessage, setInputMessage] = useState('');
@@ -110,16 +105,16 @@ export default function RoomChat({ navigation }) {
                     </View>
                 </View>
             ),
-            headerRight: () => (
-                <TouchableOpacity
-                    style={{ paddingRight: 10 }}
-                    onPress={() => {
-                        Alert.alert('Audio Call', 'Audio Call Button Pressed');
-                    }}
-                >
-                    <Icon name='call' size={28} color='#fff' />
-                </TouchableOpacity>
-            ),
+            // headerRight: () => (
+            //     <TouchableOpacity
+            //         style={{ paddingRight: 10 }}
+            //         onPress={() => {
+            //             Alert.alert('Audio Call', 'Audio Call Button Pressed');
+            //         }}
+            //     >
+            //         <Icon name='call' size={28} color='#fff' />
+            //     </TouchableOpacity>
+            // ),
         });
     }, []);
 
@@ -151,6 +146,7 @@ export default function RoomChat({ navigation }) {
                                             item.sender === currentUser.name ? 0 : 8,
                                     }}
                                 >
+
                                     <Text
                                         style={{
                                             color: '#fff',
@@ -166,7 +162,7 @@ export default function RoomChat({ navigation }) {
                                             alignSelf: 'flex-end',
                                         }}
                                     >
-                                        {item.time}
+                                        {item.time} @{item.sender}
                                     </Text>
                                 </View>
                             </View>

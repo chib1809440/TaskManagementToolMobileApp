@@ -1,6 +1,6 @@
 import { Title, TextInput, Button, HelperText } from 'react-native-paper';
 import * as Yup from 'yup';
-import { View, Image, ScrollView, BackHandler, Alert, StyleSheet, TouchableOpacity, ToastAndroid, Text } from 'react-native';
+import { View, Image, ScrollView, BackHandler, Alert, StyleSheet, TouchableOpacity, ToastAndroid, Text, ActivityIndicator } from 'react-native';
 import { useFormik } from 'formik';
 import Theme from '../../theme';
 import CarImage from '../../assets/logo.png';
@@ -23,6 +23,7 @@ export default function Login({ navigation }) {
     });
 
     async function toLogin(data) {
+        console.log('toLogin: ', data)
         const member = await login(data)
         console.log("member: ", member)
         if (member != null) {
@@ -159,8 +160,22 @@ export default function Login({ navigation }) {
                         onPress={() => navigation.navigate('Register')}>
                         Đăng kí
                     </Button>
+                    {/* <Button mode="text"
+                        color={Theme.Theme.colors.third}
+                        onPress={() => navigation.navigate('Register')}>
+                        Quên mật khẩu
+                    </Button> */}
                 </View>
             </View>
         </ScrollView >
+        // <View
+        //     style={{
+        //         flex: 1,
+        //         alignItems: 'center',
+        //         flexDirection: 'column',
+        //         justifyContent: 'center'
+        //     }}>
+        //     <ActivityIndicator size="large" color="#00ff00" />
+        // </View>
     )
 }

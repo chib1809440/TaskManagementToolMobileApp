@@ -3,8 +3,8 @@ import { View, Text, SafeAreaView, TouchableOpacity, ToastAndroid, Modal, StyleS
 import { Icon } from 'react-native-elements';
 import Theme from '../../theme/Theme'
 import { List, TextInput } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+// import { MaterialIcons } from '@expo/vector-icons';
+// import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useRoute, DrawerActions } from '@react-navigation/native';
 import { getProjectInfo, searchProjectInfo, addProject } from '../../apis/api'
 import { AntDesign } from '@expo/vector-icons';
@@ -24,45 +24,40 @@ const MainBoard = ({ navigation }) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        console.log("onRefresh: ", owner)
-        fetchData(owner)
+        // fetchData(owner)
         setRefreshing(false)
     }, []);
 
     async function getOwner() {
         try {
             const username = await AsyncStorage.getItem('userName')
-            console.log("username-getOwner: ", username)
             setOwner(username)
         } catch (e) {
             console.log("Get Owner Error: ", e)
+        } finally {
+            owner && fetchData(owner)
         }
     }
 
     async function fetchData(owner) {
         const projectInfo = await getProjectInfo(owner)
-        console.log("projectInfo: ", projectInfo)
         setProjectInfo(projectInfo)
     }
 
     async function searchInfoProject(projectName) {
         const projectInfo = await searchProjectInfo(projectName, owner)
-        console.log("projectInfo: ", projectInfo)
         setProjectInfo(projectInfo)
     }
 
     async function createProject(data) {
-        console.log("data to create project: ", data)
         const createProject = await addProject(data)
-        console.log("createProject: ", createProject)
-    }
-    React.useEffect(() => {
         getOwner()
-        console.log("owner:", owner)
-    }, [])
+    }
 
     React.useEffect(() => {
-        fetchData(owner)
+        setIsLoading(false)
+        getOwner()
+        setIsLoading(true)
     }, [owner, modalOpen == false]);
 
     React.useEffect(() => {
@@ -70,7 +65,7 @@ const MainBoard = ({ navigation }) => {
         if (query.length > 0) {
             searchInfoProject(query)
         } else {
-            fetchData(owner)
+            // fetchData(owner)
         }
     }, [searchProject]);
 
@@ -226,7 +221,7 @@ const MainBoard = ({ navigation }) => {
                                 width: 260,
                                 height: 40,
                             }}
-                            placeholder='Search'
+                            placeholder='Nhập tên dự án cần tìm...'
                             value={searchProject}
                             onChangeText={(searchProject) => {
                                 setSearchProject(searchProject, owner)
@@ -238,10 +233,6 @@ const MainBoard = ({ navigation }) => {
                     <TouchableOpacity
                         style={{ paddingHorizontal: 8, marginRight: 8 }}
                         onPress={() => {
-                            console.log("onPress search project")
-                            if (showSearch == true) {
-                                console.log("@@@@@@@@@@@@@@@@@")
-                            }
                             setShowSearch(true)
 
                             // navigation.navigate('Menu WorkSpaces')
@@ -302,8 +293,6 @@ const MainBoard = ({ navigation }) => {
                                         description={project.tagNameProject}
                                         left={props => <List.Icon {...props} icon="tag" />}
                                         onPress={() => {
-                                            console.log("onPress to switch topic screen :", project._id)
-                                            console.log("params:", { projectID: project._id, tagNameProject: project.tagNameProject })
                                             navigation.navigate('Topic', {
                                                 screen: 'TopicMain',
                                                 params: { projectID: project._id, tagNameProject: project.tagNameProject, owner: project.owner, currentUser: owner },
@@ -335,7 +324,6 @@ const MainBoard = ({ navigation }) => {
                                 borderRadius: 30,
                             }}
                             onPress={() => {
-                                console.log('Add Topic')
                                 setModalOpen(true)
                             }}
                         >

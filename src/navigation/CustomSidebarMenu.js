@@ -28,7 +28,6 @@ const CustomSidebarMenu = (props, navigation) => {
         getData()
     }, [])
     return (
-        console.log("info: ", info),
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.individualInfo}>
                 <Image
@@ -59,8 +58,10 @@ const CustomSidebarMenu = (props, navigation) => {
                     name="bar-chart-o"
                     backgroundColor={Theme.Theme.colors.third}
                     onPress={() => {
-                        console.log("on press on My Tash")
-                        props.navigation.navigate('Overview')
+                        console.log("on press on OverView")
+                        props.navigation.navigate('Overview', {
+                            owner: info.email
+                        })
                     }}
                 >
                     Overview
@@ -68,48 +69,21 @@ const CustomSidebarMenu = (props, navigation) => {
             </View>
             <View style={{ marginHorizontal: 10, marginTop: 8 }}>
                 <Icon.Button
-                    name="list"
+                    name="info"
                     backgroundColor={Theme.Theme.colors.third}
                     onPress={() => {
                         console.log("on press on My Tash")
-                        props.navigation.navigate('MyTask')
+                        props.navigation.navigate('MyTask', {
+                            username: info.email
+                        })
+                    }}
+                    style={{
+                        marginLeft: 4
                     }}
                 >
-                    Tasks
+                    <Text style={{ color: '#fff', paddingLeft: 12 }}>Info</Text>
                 </Icon.Button>
             </View>
-            {/* 
-            <View style={styles.WorkspacesInfo}>
-                <View style={styles.WorkspacesInfoText}> */}
-            {/* <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                        Workspaces
-                        <Text
-                            style={{
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                color: Theme.Theme.colors.third
-                            }}>
-                            ({listWorkSpaces.length})
-                        </Text>
-                    </Text> */}
-            {/* </View> */}
-
-            {/* <ScrollView showsVerticalScrollIndicator={false}>
-                    {listWorkSpaces.map(item => {
-                        return (
-                            <View key={item._id} style={{ marginBottom: 8 }}>
-                                <Icon.Button
-                                    name={'building'}
-                                    backgroundColor={Theme.Theme.colors.third}
-                                    onPress={() => props.navigation.navigate('MainBoard', { workSpaceId: item._id })}
-                                >
-                                    {item.projectName}
-                                </Icon.Button>
-                            </View>
-                        )
-                    })}
-                </ScrollView> */}
-            {/* </View> */}
 
             <View style={{
                 flex: 1,
